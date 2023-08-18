@@ -68,7 +68,7 @@ class Dosen extends BaseController
         foreach ($id as $ids) {
             $get = $this->dosenm->find($ids);
             $data = array(
-                'nama' => '<b>' . $get->nama . '</b>',
+                'nama' => '<b>' . $get->nama_penjabat . '</b>',
                 'get' => $get,
             );
             $this->data['form_input'][] = view('App\Views\dosen\form_input', $data);
@@ -82,13 +82,18 @@ class Dosen extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('nama');
+                $nama = $this->request->getPost('id');
                 $data = array();
                 foreach ($nama as $key => $val) {
+                    $nidn = $this->request->getPost('nomor_induk')[$key];
+                    if ($this->dosenm->where('jabatan', 'dosen')->where('nomor_induk', $nidn)->first()) {
+                        session()->setFlashdata('errorNIDN', 'NIDN sudah terdaftar');
+                        break;
+                    }
                     array_push($data, array(
-                        'jabatan' => $this->request->getPost('jabatan')[$key],
-                        'kelas_id' => $this->request->getPost('kelas_id')[$key],
-                        'nomor_induk' => $this->request->getPost('nomor_induk')[$key],
+                        'jabatan' => 'dosen',
+                        'kelas_id' => null,
+                        'nomor_induk' => $nidn,
                         'nama_penjabat' => $this->request->getPost('nama_penjabat')[$key],
                         'jk' => $this->request->getPost('jk')[$key],
                         'tempat_lahir' => $this->request->getPost('tempat_lahir')[$key],
@@ -99,6 +104,11 @@ class Dosen extends BaseController
                         'pendidikan' => $this->request->getPost('pendidikan')[$key],
                         'lulusan' => $this->request->getPost('lulusan')[$key],
                     ));
+                }
+                if (session()->getFlashdata('errorNIDN')) {
+                    $status['type'] = 'error';
+                    $status['text'] = ['NIDN' => session()->getFlashdata('errorNIDN')];
+                    return json_encode($status);
                 }
                 if ($this->dosenm->insertBatch($data)) {
                     $status['type'] = 'success';
@@ -113,11 +123,17 @@ class Dosen extends BaseController
                 $id = $this->request->getPost('id');
                 $data = array();
                 foreach ($id as $key => $val) {
+                    $nidn = $this->request->getPost('nomor_induk')[$key];
+                    if ($this->dosenm->where('jabatan', 'dosen')->where('nomor_induk', $nidn)->first()) {
+                        $nomorDosen = $this->dosenm->where('id', $val)->first()->nomor_induk;
+                        if($nidn !== $nomorDosen) {
+                            session()->setFlashdata('errorNIDN', 'NIDN sudah terdaftar');
+                            break;
+                        }
+                    }
                     array_push($data, array(
                         'id' => $val,
-                        'jabatan' => $this->request->getPost('jabatan')[$key],
-                        'kelas_id' => $this->request->getPost('kelas_id')[$key],
-                        'nomor_induk' => $this->request->getPost('nomor_induk')[$key],
+                        'nomor_induk' => $nidn,
                         'nama_penjabat' => $this->request->getPost('nama_penjabat')[$key],
                         'jk' => $this->request->getPost('jk')[$key],
                         'tempat_lahir' => $this->request->getPost('tempat_lahir')[$key],
@@ -128,6 +144,11 @@ class Dosen extends BaseController
                         'pendidikan' => $this->request->getPost('pendidikan')[$key],
                         'lulusan' => $this->request->getPost('lulusan')[$key],
                     ));
+                }
+                if (session()->getFlashdata('errorNIDN')) {
+                    $status['type'] = 'error';
+                    $status['text'] = ['NIDN' => session()->getFlashdata('errorNIDN')];
+                    return json_encode($status);
                 }
                 if ($this->dosenm->updateBatch($data, 'id')) {
                     $status['type'] = 'success';

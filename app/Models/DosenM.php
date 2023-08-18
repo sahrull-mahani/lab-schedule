@@ -17,9 +17,6 @@ class DosenM extends Model
     protected $deletedField  = 'deleted_at';
 
     protected $validationRules = [
-        'jabatan' => 'required|max_length[9]',
-        'kelas_id' => 'max_length[]',
-        'nomor_induk' => 'required|max_length[25]',
         'nama_penjabat' => 'required|max_length[100]',
         'jk' => 'required|max_length[9]',
         'tempat_lahir' => 'required|max_length[50]',
@@ -31,8 +28,6 @@ class DosenM extends Model
     ];
 
     protected $validationMessages = [
-        'jabatan' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 9 Karakter'],
-        'kelas_id' => ['max_length' => 'Maximal  Karakter'],
         'nomor_induk' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 25 Karakter'],
         'nama_penjabat' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 100 Karakter'],
         'jk' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 9 Karakter'],
@@ -45,7 +40,7 @@ class DosenM extends Model
     ];
     private function _get_datatables()
     {
-        $column_search = array('jabatan', 'kelas_id', 'nomor_induk', 'nama_penjabat', 'jk', 'tempat_lahir', 'tgl_lahir', 'gelar_depan', 'gelar_belakang', 'alamat', 'pendidikan', 'lulusan');
+        $column_search = array('nomor_induk', 'nama_penjabat', 'jk', 'tempat_lahir', 'tgl_lahir', 'gelar_depan', 'gelar_belakang', 'alamat', 'pendidikan', 'lulusan');
         $i = 0;
         foreach ($column_search as $item) { // loop column 
             if ($_GET['search']) {

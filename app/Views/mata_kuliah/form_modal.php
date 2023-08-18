@@ -26,10 +26,19 @@
                 data: $('form').serialize(),
                 success: function(response) {
                     var data = $.parseJSON(response);
-                    Lobibox.notify(data.type, {
-                        position: 'top right',
-                        msg: data.text
-                    });
+                    if (data.type == 'success') {
+                        Lobibox.notify(data.type, {
+                            position: 'top right',
+                            msg: data.text
+                        })
+                    } else {
+                        $.each(data.text, function(i, val) {
+                            Lobibox.notify(data.type, {
+                                position: 'top right',
+                                msg: ($.type(i) != 'number' ? `${i} : ` : '') + val
+                            })
+                        })
+                    }
                     $('#modal_content').modal('hide');
                     $('#table').bootstrapTable('refresh');
                 },
