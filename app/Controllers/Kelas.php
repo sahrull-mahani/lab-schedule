@@ -57,7 +57,7 @@ class Kelas extends BaseController
         foreach ($id as $ids) {
             $get = $this->kelasm->find($ids);
             $data = array(
-                'nama' => '<b>' . $get->nama . '</b>',
+                'nama' => '<b>' . $get->nama_kelas . '</b>',
                 'get' => $get,
             );
             $this->data['form_input'][] = view('App\Views\kelas\form_input', $data);
@@ -71,7 +71,7 @@ class Kelas extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('nama');
+                $nama = $this->request->getPost('id');
                 $data = array();
                 foreach ($nama as $key => $val) {
                     array_push($data, array(
