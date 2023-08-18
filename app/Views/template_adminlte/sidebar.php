@@ -19,32 +19,11 @@
 
         <?php if (is_admin()) : ?>
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Data Dosen & Mahasiswa</h6>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link text-white <?= @$m_pangkalan ?>" href="<?= site_url('pangkalan') ?>">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">person_add</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Dosen</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white <?= @$m_pangkalan ?>" href="<?= site_url('pangkalan') ?>">
-                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="material-icons opacity-10">person_add</i>
-                    </div>
-                    <span class="nav-link-text ms-1">Mahasiswa</span>
-                </a>
-            </li>
-
-            <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Data Master</h6>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link text-white <?= @$m_pangkalan ?>" href="<?= site_url('pangkalan') ?>">
+                <a class="nav-link text-white <?= @$m_kelas ?>" href="<?= site_url('kelas') ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">meeting_room</i>
                     </div>
@@ -52,11 +31,32 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white <?= @$m_pangkalan ?>" href="<?= site_url('pangkalan') ?>">
+                <a class="nav-link text-white <?= @$m_mata_kuliah ?>" href="<?= site_url('mata_kuliah') ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">library_books</i>
                     </div>
                     <span class="nav-link-text ms-1">Mata Kuliah</span>
+                </a>
+            </li>
+
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Data Dosen & Mahasiswa</h6>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white <?= @$m_dosen ?>" href="<?= site_url('dosen') ?>">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">person_add</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Dosen</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white <?= @$m_mahasiswa ?>" href="<?= site_url('mahasiswa') ?>">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">person_add</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Mahasiswa</span>
                 </a>
             </li>
         <?php endif ?>
@@ -66,7 +66,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link text-white <?= @$m_pangkalan ?>" href="<?= site_url('pangkalan') ?>">
+            <a class="nav-link text-white <?= @$m_jadwal ?>" href="<?= site_url('jadwal') ?>">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                     <i class="material-icons opacity-10">pending_actions</i>
                 </div>
@@ -80,7 +80,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link text-white <?= @$m_users ?>" href="<?= site_url('users') ?>">
+                <a class="nav-link text-white <?= @$m_fasilitas ?>" href="<?= site_url('fasilitas') ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">build_circle</i>
                     </div>

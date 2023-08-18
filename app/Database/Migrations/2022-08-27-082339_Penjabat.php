@@ -11,6 +11,7 @@ class Peagawai extends Migration
         $this->forge->addField([
             'id' => ['type' => 'int', 'constraint' => 10, 'unsigned' => true, 'auto_increment' => true],
             'jabatan' => ['type' => 'enum', 'constraint' => ['k-lab', 'dosen', 'mahasiswa']],
+            'kelas_id' => ['type' => 'int', 'constraint' => 6, 'null' => true, 'unsigned' => true],
             'nomor_induk' => ['type' => 'char', 'constraint' => 25],
             'nama_penjabat' => ['type' => 'char', 'constraint' => 100],
             'jk' => ['type' => 'enum', 'constraint' => ['Laki-laki', 'Perempuan']],
@@ -26,6 +27,7 @@ class Peagawai extends Migration
             'deleted_at' => ['type' => 'date', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
+        $this->forge->addForeignKey('kelas_id', 'kelas', 'id', 'set null', 'cascade');
         $this->forge->createTable('penjabat', true);
     }
 

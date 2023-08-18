@@ -28,9 +28,24 @@ class BasicSeeder extends Seeder
         ];
         $this->db->table('groups')->insertBatch($groups);
 
+        $kelas = [
+            [
+                'nama_kelas'    => 'kelas A',
+                'created_at'    => date('Y-m-d'),
+                'updated_at'    => date('Y-m-d'),
+            ],
+            [
+                'nama_kelas'    => 'kelas B',
+                'created_at'    => date('Y-m-d'),
+                'updated_at'    => date('Y-m-d'),
+            ],
+        ];
+        $this->db->table('kelas')->insertBatch($kelas);
+
         $penjabat = [
             [
                 'jabatan'           => 'k-lab',
+                'kelas_id'          => null,
                 'nomor_induk'       => '7350708',
                 'nama_penjabat'     => 'nama kapala lab',
                 'jk'                => 'Laki-laki',
@@ -46,6 +61,7 @@ class BasicSeeder extends Seeder
             ],
             [
                 'jabatan'           => 'dosen',
+                'kelas_id'          => null,
                 'nomor_induk'       => '7550101',
                 'nama_penjabat'     => 'nama dosen',
                 'jk'                => 'Laki-laki',
@@ -61,6 +77,7 @@ class BasicSeeder extends Seeder
             ],
             [
                 'jabatan'           => 'mahasiswa',
+                'kelas_id'          => 1,
                 'nomor_induk'       => '2023001',
                 'nama_penjabat'     => 'nama mahasiswa',
                 'jk'                => 'Laki-laki',
