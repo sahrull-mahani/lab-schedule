@@ -2,14 +2,16 @@
 
 namespace App\Controllers;
 
+use App\Models\KelasM;
 use App\Models\MahasiswaM;
 
 class Mahasiswa extends BaseController
 {
-    protected $mahasiswam, $data, $session;
+    protected $mahasiswam, $data, $session, $kelasm;
     function __construct()
     {
         $this->mahasiswam = new MahasiswaM();
+        $this->kelasm = new KelasM();
     }
     public function index()
     {
@@ -54,6 +56,7 @@ class Mahasiswa extends BaseController
         $num_of_row = $this->request->getPost('num_of_row');
         for ($x = 1; $x <= $num_of_row; $x++) {
             $data['nama'] = 'Data ' . $x;
+            $data['kelas'] = $this->kelasm->findAll();
             $this->data['form_input'][] = view('App\Views\mahasiswa\form_input', $data);
         }
         $status['html']         = view('App\Views\mahasiswa\form_modal', $this->data);
@@ -68,8 +71,9 @@ class Mahasiswa extends BaseController
         foreach ($id as $ids) {
             $get = $this->mahasiswam->find($ids);
             $data = array(
-                'nama' => '<b>' . $get->nama . '</b>',
+                'nama' => '<b>' . $get->nama_penjabat . '</b>',
                 'get' => $get,
+                'kelas' => $this->kelasm->findAll(),
             );
             $this->data['form_input'][] = view('App\Views\mahasiswa\form_input', $data);
         }
@@ -82,23 +86,29 @@ class Mahasiswa extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('nama');
+                $nama = $this->request->getPost('id');
                 $data = array();
                 foreach ($nama as $key => $val) {
+                    $nim = $this->request->getPost('nomor_induk')[$key];
+                    if ($this->mahasiswam->where('jabatan', 'mahasiswa')->where('nomor_induk', $nim)->first()) {
+                        session()->setFlashdata('errorNIM', 'NIM sudah terdaftar');
+                        break;
+                    }
                     array_push($data, array(
-                        'jabatan' => $this->request->getPost('jabatan')[$key],
+                        'jabatan' => 'mahasiswa',
                         'kelas_id' => $this->request->getPost('kelas_id')[$key],
                         'nomor_induk' => $this->request->getPost('nomor_induk')[$key],
                         'nama_penjabat' => $this->request->getPost('nama_penjabat')[$key],
                         'jk' => $this->request->getPost('jk')[$key],
                         'tempat_lahir' => $this->request->getPost('tempat_lahir')[$key],
                         'tgl_lahir' => get_format_date_sql($this->request->getPost('tgl_lahir')[$key]),
-                        'gelar_depan' => $this->request->getPost('gelar_depan')[$key],
-                        'gelar_belakang' => $this->request->getPost('gelar_belakang')[$key],
                         'alamat' => $this->request->getPost('alamat')[$key],
-                        'pendidikan' => $this->request->getPost('pendidikan')[$key],
-                        'lulusan' => $this->request->getPost('lulusan')[$key],
                     ));
+                }
+                if (session()->getFlashdata('errorNIM')) {
+                    $status['type'] = 'error';
+                    $status['text'] = ['NIM' => session()->getFlashdata('errorNIM')];
+                    return json_encode($status);
                 }
                 if ($this->mahasiswam->insertBatch($data)) {
                     $status['type'] = 'success';
@@ -113,21 +123,29 @@ class Mahasiswa extends BaseController
                 $id = $this->request->getPost('id');
                 $data = array();
                 foreach ($id as $key => $val) {
+                    $nim = $this->request->getPost('nomor_induk')[$key];
+                    if ($this->mahasiswam->where('jabatan', 'mahasiswa')->where('nomor_induk', $nim)->first()) {
+                        $nomorMahasiswa = $this->mahasiswam->where('id', $val)->first()->nomor_induk;
+                        if ($nim !== $nomorMahasiswa) {
+                            session()->setFlashdata('errorNIM', 'NIM sudah terdaftar');
+                            break;
+                        }
+                    }
                     array_push($data, array(
                         'id' => $val,
-                        'jabatan' => $this->request->getPost('jabatan')[$key],
                         'kelas_id' => $this->request->getPost('kelas_id')[$key],
                         'nomor_induk' => $this->request->getPost('nomor_induk')[$key],
                         'nama_penjabat' => $this->request->getPost('nama_penjabat')[$key],
                         'jk' => $this->request->getPost('jk')[$key],
                         'tempat_lahir' => $this->request->getPost('tempat_lahir')[$key],
                         'tgl_lahir' => get_format_date_sql($this->request->getPost('tgl_lahir')[$key]),
-                        'gelar_depan' => $this->request->getPost('gelar_depan')[$key],
-                        'gelar_belakang' => $this->request->getPost('gelar_belakang')[$key],
                         'alamat' => $this->request->getPost('alamat')[$key],
-                        'pendidikan' => $this->request->getPost('pendidikan')[$key],
-                        'lulusan' => $this->request->getPost('lulusan')[$key],
                     ));
+                }
+                if (session()->getFlashdata('errorNIM')) {
+                    $status['type'] = 'error';
+                    $status['text'] = ['NIM' => session()->getFlashdata('errorNIM')];
+                    return json_encode($status);
                 }
                 if ($this->mahasiswam->updateBatch($data, 'id')) {
                     $status['type'] = 'success';

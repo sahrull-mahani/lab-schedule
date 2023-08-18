@@ -17,31 +17,21 @@ class MahasiswaM extends Model
     protected $deletedField  = 'deleted_at';
 
     protected $validationRules = [
-        'jabatan' => 'required|max_length[9]',
-        'kelas_id' => 'max_length[]',
+        'kelas_id' => 'max_length[10]',
         'nomor_induk' => 'required|max_length[25]',
         'nama_penjabat' => 'required|max_length[100]',
         'jk' => 'required|max_length[9]',
         'tempat_lahir' => 'required|max_length[50]',
-        'gelar_depan' => 'max_length[25]',
-        'gelar_belakang' => 'max_length[25]',
         'alamat' => 'required|max_length[65535]',
-        'pendidikan' => 'required|max_length[10]',
-        'lulusan' => 'max_length[100]',
     ];
 
     protected $validationMessages = [
-        'jabatan' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 9 Karakter'],
-        'kelas_id' => ['max_length' => 'Maximal  Karakter'],
+        'kelas_id' => ['max_length' => 'Maximal 10 Karakter'],
         'nomor_induk' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 25 Karakter'],
         'nama_penjabat' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 100 Karakter'],
         'jk' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 9 Karakter'],
         'tempat_lahir' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 50 Karakter'],
-        'gelar_depan' => ['max_length' => 'Maximal 25 Karakter'],
-        'gelar_belakang' => ['max_length' => 'Maximal 25 Karakter'],
         'alamat' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 65535 Karakter'],
-        'pendidikan' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 10 Karakter'],
-        'lulusan' => ['max_length' => 'Maximal 100 Karakter'],
     ];
     private function _get_datatables()
     {
