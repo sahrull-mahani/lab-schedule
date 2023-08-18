@@ -1,0 +1,54 @@
+:root {
+    --ijo-satpol: #0e3311;
+    --ijo-satpol-brighter: #225526;
+    --ijo-satpol-darker: #031104;
+}
+
+::-moz-selection {
+    /* Code for Firefox */
+    color: white;
+    background: var(--ijo-satpol-brighter);
+}
+
+::selection {
+    color: white;
+    background: var(--ijo-satpol-brighter);
+}
+
+.bg-white-30 {
+    background-color: rgba(255, 255, 255, .3);
+}
+
+.bg-white-60 {
+    background-color: rgba(255, 255, 255, .6);
+}
+
+.card-primary {
+    border-top: 3px solid var(--ijo-satpol) !important;
+}
+
+.btn-primary {
+    background-color: var(--ijo-satpol);
+    border: 1 solid var(--ijo-satpol-darker) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--ijo-satpol-brighter) !important;
+    border: 1 solid var(--ijo-satpol-darker) !important;
+}
+
+a {
+    color: var(--ijo-satpol);
+    font-weight: normal;
+    -webkit-transition: all ease-in .3s;
+    transition: all ease-in .3s;
+}
+
+a:hover {
+    color: var(--ijo-satpol-brighter);
+    font-weight: bold;
+}
+
+input.form-control:focus {
+    border: 1px solid var(--ijo-satpol);
+}
