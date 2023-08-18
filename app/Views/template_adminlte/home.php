@@ -11,7 +11,7 @@
                     </div>
                     <div class="text-end pt-1">
                         <p class="text-sm mb-0 text-capitalize">Kuota LPG</p>
-                        <h4 class="mb-0"><?= $kuota->total ?? 0 ?></h4>
+                        <h4 class="mb-0"><?= 0 ?></h4>
                     </div>
                 </div>
                 <hr class="dark horizontal my-0">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="text-end pt-1">
                         <p class="text-sm mb-0 text-capitalize">Total Pangkalan</p>
-                        <h4 class="mb-0"><?= $pangkalan ?></h4>
+                        <h4 class="mb-0"><?= 0 ?></h4>
                     </div>
                 </div>
                 <hr class="dark horizontal my-0">
@@ -47,7 +47,7 @@
                     </div>
                     <div class="text-end pt-1">
                         <p class="text-sm mb-0 text-capitalize">Total Bahan Pokok</p>
-                        <h4 class="mb-0"><?= $pokok ?></h4>
+                        <h4 class="mb-0"><?= 0 ?></h4>
                     </div>
                 </div>
                 <hr class="dark horizontal my-0">
@@ -65,7 +65,7 @@
                     </div>
                     <div class="text-end pt-1">
                         <p class="text-sm mb-0 text-capitalize">Total Bahan Penting</p>
-                        <h4 class="mb-0"><?= $penting ?></h4>
+                        <h4 class="mb-0"><?= 0 ?></h4>
                     </div>
                 </div>
                 <hr class="dark horizontal my-0">

@@ -125,7 +125,7 @@ class IonAuth extends BaseConfig
 	public $adminEmail               = 'no-reply@bolmutkab.go.id'; // Admin Email, admin@example.com
 	public $defaultGroup             = 'users';           // Default group, use name
 	public $adminGroup               = 'admin';             // Default administrators group, use name
-	public $identity                 = 'email';             /* You can use any unique column in your table as identity column.
+	public $identity                 = 'username';             /* You can use any unique column in your table as identity column.
 																	IMPORTANT: If you are changing it from the default (email),
 																				update the UNIQUE constraint in your DB */
 	public $minPasswordLength        = 8;                   // Minimum Required Length of Password (not enforced by lib - see note above)

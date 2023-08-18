@@ -14,20 +14,68 @@ class BasicSeeder extends Seeder
                 'description'   => 'Administrator'
             ],
             [
-                'name'          => 'operator',
-                'description'   => 'Kepala Bidang'
+                'name'          => 'k-lab',
+                'description'   => 'Kepala Laboratorium Komputer'
             ],
             [
-                'name'          => 'verifikator',
-                'description'   => 'Verifikator'
+                'name'          => 'dosen',
+                'description'   => 'Dosen Pengajar'
             ],
             [
-                'name'          => 'pimpinan',
-                'description'   => 'Pimpinan SKPD'
+                'name'          => 'mahasiswa',
+                'description'   => 'Mahasiswa'
             ],
         ];
         $this->db->table('groups')->insertBatch($groups);
 
+        $penjabat = [
+            [
+                'jabatan'           => 'k-lab',
+                'nomor_induk'       => '7350708',
+                'nama_penjabat'     => 'nama kapala lab',
+                'jk'                => 'Laki-laki',
+                'tempat_lahir'      => 'Makassar',
+                'tgl_lahir'         => '1983-05-17',
+                'gelar_depan'       => null,
+                'gelar_belakang'    => 'S.Kom, M.Kom',
+                'alamat'            => 'Kota Gorontalo, Jln. Setapak, 698871',
+                'pendidikan'        => 'S2',
+                'lulusan'           => 'Unhas Makassar',
+                'created_at'        => date('Y-m-d'),
+                'updated_at'        => date('Y-m-d'),
+            ],
+            [
+                'jabatan'           => 'dosen',
+                'nomor_induk'       => '7550101',
+                'nama_penjabat'     => 'nama dosen',
+                'jk'                => 'Laki-laki',
+                'tempat_lahir'      => 'Gorontalo',
+                'tgl_lahir'         => '1988-08-17',
+                'gelar_depan'       => 'Drs',
+                'gelar_belakang'    => 'S.Kom, M.Kom',
+                'alamat'            => 'Kota Gorontalo, Jln. Setapak, 698871',
+                'pendidikan'        => 'S3',
+                'lulusan'           => 'Unsrat Manado',
+                'created_at'        => date('Y-m-d'),
+                'updated_at'        => date('Y-m-d'),
+            ],
+            [
+                'jabatan'           => 'mahasiswa',
+                'nomor_induk'       => '2023001',
+                'nama_penjabat'     => 'nama mahasiswa',
+                'jk'                => 'Laki-laki',
+                'tempat_lahir'      => 'Gorontalo',
+                'tgl_lahir'         => '2002-01-27',
+                'gelar_depan'       => null,
+                'gelar_belakang'    => null,
+                'alamat'            => 'Kab Gorontalo, Jln. Hubulo, 96288',
+                'pendidikan'        => '',
+                'lulusan'           => 'SMK N 1 Limboto',
+                'created_at'        => date('Y-m-d'),
+                'updated_at'        => date('Y-m-d'),
+            ],
+        ];
+        $this->db->table('penjabat')->insertBatch($penjabat);
         
         $users = [
             [
@@ -44,15 +92,39 @@ class BasicSeeder extends Seeder
             ],
             [
                 'ip_address'        => '127.0.0.1',
-                'username'          => 'operator',
+                'username'          => '7350708',
                 'password'          => '$2y$10$KwpwKG15gc4fPUDDYhUkluvhymHNbAx4daEZjWFBIaeIfnP3yTw.m',
-                'email'             => 'operator@mail.go.id',
+                'email'             => 'kepala-lab@mail.go.id',
                 'created_on'        => 1268889823,
                 'last_login'        => 1661586883,
                 'active'            => 1,
-                'nama_user'         => 'Operator',
+                'nama_user'         => 'Kelapa Laboratorium',
                 'phone'             => '08',
-                'id_peg'            => null,
+                'id_peg'            => '1',
+            ],
+            [
+                'ip_address'        => '127.0.0.1',
+                'username'          => '7550101',
+                'password'          => '$2y$10$KwpwKG15gc4fPUDDYhUkluvhymHNbAx4daEZjWFBIaeIfnP3yTw.m',
+                'email'             => 'dosen@mail.go.id',
+                'created_on'        => 1268889823,
+                'last_login'        => 1661586883,
+                'active'            => 1,
+                'nama_user'         => 'Nama Dosen',
+                'phone'             => '08',
+                'id_peg'            => '2',
+            ],
+            [
+                'ip_address'        => '127.0.0.1',
+                'username'          => '2023001',
+                'password'          => '$2y$10$KwpwKG15gc4fPUDDYhUkluvhymHNbAx4daEZjWFBIaeIfnP3yTw.m',
+                'email'             => 'mahasiswa@mail.go.id',
+                'created_on'        => 1268889823,
+                'last_login'        => 1661586883,
+                'active'            => 1,
+                'nama_user'         => 'Nama Mahasiswa',
+                'phone'             => '08',
+                'id_peg'            => '3',
             ],
         ];
         $this->db->table('users')->insertBatch($users);
@@ -63,56 +135,26 @@ class BasicSeeder extends Seeder
                 'group_id'  => 1
             ],
             [
+                'user_id'   => 1,
+                'group_id'  => 2
+            ],
+            [
+                'user_id'   => 2,
+                'group_id'  => 1
+            ],
+            [
                 'user_id'   => 2,
                 'group_id'  => 2
             ],
+            [
+                'user_id'   => 3,
+                'group_id'  => 3
+            ],
+            [
+                'user_id'   => 4,
+                'group_id'  => 4
+            ],
         ];
         $this->db->table('users_groups')->insertBatch($usersGroups);
-
-        $jabatan = [
-            [
-                'nama'      => 'Kepala Bagian',
-                'created_at'=> date('Y-m-d'),
-                'updated_at'=> date('Y-m-d'),
-            ],
-            [
-                'nama'      => 'Kasubbag Bina Produksi',
-                'created_at'=> date('Y-m-d'),
-                'updated_at'=> date('Y-m-d'),
-            ],
-        ];
-        $this->db->table('jabatan')->insertBatch($jabatan);
-
-        $pegawai = [
-            [
-                'jab_id'        => 1,
-                'nama'          => 'User Kosong Satu',
-                'jk'            => 'Perempuan',
-                'tempat_lahir'  => 'Madagaskar',
-                'tgl_lahir'     => '1998-03-26',
-                'gelar_depan'   => '-',
-                'gelar_belakang'=> '-',
-                'alamat'        => 'Suaka',
-                'pendidikan'    => 'SMA/SMK/MA',
-                'lulusan'       => 'SMP Kehutanan',
-                'created_at'    => date('Y-m-d'),
-                'updated_at'    => date('Y-m-d'),
-            ],
-            [
-                'jab_id'        => 2,
-                'nama'          => 'User Kosong Dua',
-                'jk'            => 'Perempuan',
-                'tempat_lahir'  => 'Madagaskar',
-                'tgl_lahir'     => '1999-05-11',
-                'gelar_depan'   => '-',
-                'gelar_belakang'=> '-',
-                'alamat'        => 'Suaka',
-                'pendidikan'    => 'SMA/SMK/MA',
-                'lulusan'       => 'SMP Kehutanan',
-                'created_at'    => date('Y-m-d'),
-                'updated_at'    => date('Y-m-d'),
-            ],
-        ];
-        $this->db->table('pegawai')->insertBatch($pegawai);
     }
 }

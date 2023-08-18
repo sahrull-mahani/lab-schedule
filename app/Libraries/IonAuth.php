@@ -6,7 +6,7 @@ class IonAuth
 {
 	protected $config;
 	protected $ionAuthModel;
-	protected $email;
+	protected $email, $session;
 	public function __construct()
 	{
 		// Check compat first

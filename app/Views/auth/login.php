@@ -32,7 +32,7 @@
     <input type="hidden" class="csrf-hash" value="<?= csrf_hash() ?>" />
     <div class="form-field d-flex align-items-center">
       <span class="far fa-user"></span>
-      <input onkeyup="check()" id="email" type="email" autocomplete="off" placeholder="Email" name="identity" placeholder="<?= lang('Auth.login_identity_label') ?>" required>
+      <input onkeyup="check()" id="email" type="text" autocomplete="off" placeholder="Username" name="identity" placeholder="<?= lang('Auth.login_identity_label') ?>" required>
     </div>
     <div class="form-field d-flex align-items-center">
       <span class="fas fa-lock" role="button" id="password-icon"></span>

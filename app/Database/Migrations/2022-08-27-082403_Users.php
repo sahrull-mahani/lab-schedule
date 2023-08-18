@@ -30,7 +30,7 @@ class Users extends Migration
 			'id_peg' => ['type' => 'int', 'constraint' => 10, 'null' => true, 'unsigned' => true],
         ]);        
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('id_peg', 'pegawai', 'id', 'SET NULL', 'CASCADE');
+        $this->forge->addForeignKey('id_peg', 'penjabat', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('users', true);
     }
 
