@@ -2,14 +2,20 @@
 
 namespace App\Controllers;
 
+use App\Models\DosenM;
 use App\Models\JadwalM;
+use App\Models\KelasM;
+use App\Models\Mata_kuliahM;
 
 class Jadwal extends BaseController
 {
-    protected $jadwalm, $data, $session;
+    protected $jadwalm, $data, $session, $dosenm, $mkm, $kelasm;
     function __construct()
     {
         $this->jadwalm = new JadwalM();
+        $this->dosenm = new DosenM();
+        $this->mkm = new Mata_kuliahM();
+        $this->kelasm = new KelasM();
     }
     public function index()
     {
@@ -47,6 +53,9 @@ class Jadwal extends BaseController
         $num_of_row = $this->request->getPost('num_of_row');
         for ($x = 1; $x <= $num_of_row; $x++) {
             $data['nama'] = 'Data ' . $x;
+            $data['dosen'] = $this->dosenm->where('jabatan', 'dosen')->findAll();
+            $data['matakuliah'] = $this->mkm->findAll();
+            $data['kelas'] = $this->kelasm->findAll();
             $this->data['form_input'][] = view('App\Views\jadwal\form_input', $data);
         }
         $status['html']         = view('App\Views\jadwal\form_modal', $this->data);
@@ -59,10 +68,13 @@ class Jadwal extends BaseController
         $id = $this->request->getPost('id');
         $this->data = array('action' => 'update', 'btn' => '<i class="fas fa-edit"></i> Edit');
         foreach ($id as $ids) {
-            $get = $this->jadwalm->find($ids);
+            $get = $this->jadwalm->select('jadwal.*, p.nama_penjabat')->join('penjabat p', 'p.id=jadwal.dosen_id')->find($ids);
             $data = array(
-                'nama' => '<b>' . $get->nama . '</b>',
+                'nama' => '<b>' . $get->nama_penjabat . '</b>',
                 'get' => $get,
+                'dosen' => $this->dosenm->where('jabatan', 'dosen')->findAll(),
+                'matakuliah' => $this->mkm->findAll(),
+                'kelas' => $this->kelasm->findAll(),
             );
             $this->data['form_input'][] = view('App\Views\jadwal\form_input', $data);
         }
@@ -75,7 +87,7 @@ class Jadwal extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('nama');
+                $nama = $this->request->getPost('id');
                 $data = array();
                 foreach ($nama as $key => $val) {
                     array_push($data, array(

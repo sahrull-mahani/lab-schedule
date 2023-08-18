@@ -1,6 +1,6 @@
 <?= form_open('jadwal/save', array('class' => 'form-horizontal')); ?>
 <div class="modal-body">
-    <?php foreach ($form_input as $form) : 
+    <?php foreach ($form_input as $form) :
         echo $form;
     endforeach;
     ?>
@@ -11,36 +11,45 @@
 </div>
 <?php echo form_close(); ?>
 <script type='text/javascript'>
-$('form').on('blur', 'input[required], input.optional, select.required', validator.checkField).on('change', 'select.required', validator.checkField).on('keypress', 'input[required][pattern]', validator.keypress);
-$('.multi.required').on('keyup blur', 'input', function() {
-    validator.checkField.apply($(this).siblings().last()[0]);
-});
-$('form').submit(function(e) {
-    e.preventDefault();
-    if (!validator.checkAll($(this))) {
-        return false;
-    } else {
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'post',
-            data: $('form').serialize(),
-            success: function(response) {
-                var data = $.parseJSON(response);
-                Lobibox.notify(data.type, {
-                    position: 'top right',
-                    msg: data.text
-                });
-                $('#modal_content').modal('hide');
-                $('#table').bootstrapTable('refresh');
-            },
-            error: function(jqXHR, exception, thrownError) {
-                Lobibox.notify('error', {
-                    position: 'top right',
-                    msg: 'Error code' + jqXHR.status + ', ' + thrownError + ', ' + exception
-                });
-                $('#spinner').hide();
-            }
-        });
-    }
-});
+    $('form').on('blur', 'input[required], input.optional, select.required', validator.checkField).on('change', 'select.required', validator.checkField).on('keypress', 'input[required][pattern]', validator.keypress);
+    $('.multi.required').on('keyup blur', 'input', function() {
+        validator.checkField.apply($(this).siblings().last()[0]);
+    });
+    $('form').submit(function(e) {
+        e.preventDefault();
+        if (!validator.checkAll($(this))) {
+            return false;
+        } else {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $('form').serialize(),
+                success: function(response) {
+                    var data = $.parseJSON(response);
+                    if (data.type == 'success') {
+                        Lobibox.notify(data.type, {
+                            position: 'top right',
+                            msg: data.text
+                        })
+                    } else {
+                        $.each(data.text, function(i, val) {
+                            Lobibox.notify(data.type, {
+                                position: 'top right',
+                                msg: ($.type(i) != 'number' ? `${i} : ` : '') + val
+                            })
+                        })
+                    }
+                    $('#modal_content').modal('hide');
+                    $('#table').bootstrapTable('refresh');
+                },
+                error: function(jqXHR, exception, thrownError) {
+                    Lobibox.notify('error', {
+                        position: 'top right',
+                        msg: 'Error code' + jqXHR.status + ', ' + thrownError + ', ' + exception
+                    });
+                    $('#spinner').hide();
+                }
+            });
+        }
+    });
 </script>
