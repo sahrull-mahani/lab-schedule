@@ -1,7 +1,6 @@
 <?= $this->extend("template_adminlte/index") ?>
 
 <?= $this->section("page-content") ?>
-
 <div class="container-fluid py-4">
     <div class="card my-4">
         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
@@ -25,7 +24,7 @@
                             <th data-field="state" data-checkbox="true"></th>
                             <th data-field="id" data-visible="false">ID</th>
                             <th data-field="nomor">No</th>
-                            <th data-field="lab">Lab</th>
+                            <th data-field="lab_id">Laboratorium</th>
                             <th data-field="nama_fasilitas">Nama Fasilitas</th>
                             <th data-field="jumlah">Jumlah</th>
                             <th data-field="status">Status</th>
