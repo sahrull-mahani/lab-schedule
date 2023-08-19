@@ -2,20 +2,14 @@
 
 namespace App\Controllers;
 
-use App\Models\DosenM;
 use App\Models\JadwalM;
-use App\Models\KelasM;
-use App\Models\Mata_kuliahM;
 
 class Jadwal extends BaseController
 {
-    protected $jadwalm, $data, $session, $dosenm, $mkm, $kelasm;
+    protected $jadwalm, $data, $session;
     function __construct()
     {
         $this->jadwalm = new JadwalM();
-        $this->dosenm = new DosenM();
-        $this->mkm = new Mata_kuliahM();
-        $this->kelasm = new KelasM();
     }
     public function index()
     {
@@ -33,11 +27,13 @@ class Jadwal extends BaseController
             $row = array();
             $row['id'] = $rows->id;
             $row['nomor'] = $no++;
-            $row['dosen_id'] = $rows->nama_penjabat;
-            $row['mk_id'] = $rows->nama_mk;
-            $row['kelas_id'] = $rows->nama_kelas;
-            $row['jam'] = "$rows->jam_mulai - $rows->jam_akhir";
-            $row['tanggal'] = get_format_date($rows->tanggal);
+            $row['dosen_id'] = $rows->dosen_id;
+            $row['mk_id'] = $rows->mk_id;
+            $row['kelas_id'] = $rows->kelas_id;
+            $row['lab_id'] = $rows->lab_id;
+            $row['waktu_mulai'] = $rows->waktu_mulai;
+            $row['waktu_selesai'] = $rows->waktu_selesai;
+            $row['hari'] = $rows->hari;
             $data[] = $row;
         }
         $output = array(
@@ -53,9 +49,6 @@ class Jadwal extends BaseController
         $num_of_row = $this->request->getPost('num_of_row');
         for ($x = 1; $x <= $num_of_row; $x++) {
             $data['nama'] = 'Data ' . $x;
-            $data['dosen'] = $this->dosenm->where('jabatan', 'dosen')->findAll();
-            $data['matakuliah'] = $this->mkm->findAll();
-            $data['kelas'] = $this->kelasm->findAll();
             $this->data['form_input'][] = view('App\Views\jadwal\form_input', $data);
         }
         $status['html']         = view('App\Views\jadwal\form_modal', $this->data);
@@ -68,13 +61,10 @@ class Jadwal extends BaseController
         $id = $this->request->getPost('id');
         $this->data = array('action' => 'update', 'btn' => '<i class="fas fa-edit"></i> Edit');
         foreach ($id as $ids) {
-            $get = $this->jadwalm->select('jadwal.*, p.nama_penjabat')->join('penjabat p', 'p.id=jadwal.dosen_id')->find($ids);
+            $get = $this->jadwalm->find($ids);
             $data = array(
-                'nama' => '<b>' . $get->nama_penjabat . '</b>',
+                'nama' => '<b>' . $get->nama . '</b>',
                 'get' => $get,
-                'dosen' => $this->dosenm->where('jabatan', 'dosen')->findAll(),
-                'matakuliah' => $this->mkm->findAll(),
-                'kelas' => $this->kelasm->findAll(),
             );
             $this->data['form_input'][] = view('App\Views\jadwal\form_input', $data);
         }
@@ -87,16 +77,17 @@ class Jadwal extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('id');
+                $nama = $this->request->getPost('nama');
                 $data = array();
                 foreach ($nama as $key => $val) {
                     array_push($data, array(
                         'dosen_id' => $this->request->getPost('dosen_id')[$key],
                         'mk_id' => $this->request->getPost('mk_id')[$key],
                         'kelas_id' => $this->request->getPost('kelas_id')[$key],
-                        'jam_mulai' => $this->request->getPost('jam_mulai')[$key],
-                        'jam_akhir' => $this->request->getPost('jam_akhir')[$key],
-                        'tanggal' => get_format_date_sql($this->request->getPost('tanggal')[$key]),
+                        'lab_id' => $this->request->getPost('lab_id')[$key],
+                        'waktu_mulai' => $this->request->getPost('waktu_mulai')[$key],
+                        'waktu_selesai' => $this->request->getPost('waktu_selesai')[$key],
+                        'hari' => $this->request->getPost('hari')[$key],
                     ));
                 }
                 if ($this->jadwalm->insertBatch($data)) {
@@ -117,9 +108,10 @@ class Jadwal extends BaseController
                         'dosen_id' => $this->request->getPost('dosen_id')[$key],
                         'mk_id' => $this->request->getPost('mk_id')[$key],
                         'kelas_id' => $this->request->getPost('kelas_id')[$key],
-                        'jam_mulai' => $this->request->getPost('jam_mulai')[$key],
-                        'jam_akhir' => $this->request->getPost('jam_akhir')[$key],
-                        'tanggal' => get_format_date_sql($this->request->getPost('tanggal')[$key]),
+                        'lab_id' => $this->request->getPost('lab_id')[$key],
+                        'waktu_mulai' => $this->request->getPost('waktu_mulai')[$key],
+                        'waktu_selesai' => $this->request->getPost('waktu_selesai')[$key],
+                        'hari' => $this->request->getPost('hari')[$key],
                     ));
                 }
                 if ($this->jadwalm->updateBatch($data, 'id')) {
@@ -148,5 +140,5 @@ class Jadwal extends BaseController
 /* End of file Jadwal.php */
 /* Location: ./app/controllers/Jadwal.php */
 /* Please DO NOT modify this information : */
-/* Generated by Harviacode Codeigniter CRUD Generator 2023-08-18 10:27:15 */
+/* Generated by Harviacode Codeigniter CRUD Generator 2023-08-19 11:40:00 */
 /* http://harviacode.com */
