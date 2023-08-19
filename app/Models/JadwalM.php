@@ -17,27 +17,27 @@ class JadwalM extends Model
     protected $deletedField  = 'deleted_at';
 
     protected $validationRules = [
-        'dosen_id' => 'required|max_length[]',
-        'mk_id' => 'required|max_length[]',
-        'kelas_id' => 'required|max_length[]',
-        'lab_id' => 'required|max_length[]',
-        'waktu_mulai' => 'required|max_length[]',
-        'waktu_selesai' => 'required|max_length[]',
-        'hari' => 'required|max_length[6]',
+        'dosen_id' => 'required|max_length[6]',
+        'mk_id' => 'required|max_length[6]',
+        'kelas_id' => 'required|max_length[6]',
+        'lab_id' => 'required|max_length[6]',
+        'waktu_mulai' => 'required',
+        'waktu_selesai' => 'required',
+        'hari' => 'required',
     ];
 
     protected $validationMessages = [
-        'dosen_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal  Karakter'],
-        'mk_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal  Karakter'],
-        'kelas_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal  Karakter'],
-        'lab_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal  Karakter'],
-        'waktu_mulai' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal  Karakter'],
-        'waktu_selesai' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal  Karakter'],
-        'hari' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
+        'dosen_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
+        'mk_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
+        'kelas_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
+        'lab_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
+        'waktu_mulai' => ['required' => 'tidak boleh kosong'],
+        'waktu_selesai' => ['required' => 'tidak boleh kosong'],
+        'hari' => ['required' => 'tidak boleh kosong'],
     ];
     private function _get_datatables()
     {
-        $column_search = array('dosen_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari');
+        $column_search = array('nama_penjabat', 'nama_mk', 'nama_kelas', 'nama_lab', 'waktu_mulai', 'waktu_selesai', 'hari');
         $i = 0;
         foreach ($column_search as $item) { // loop column 
             if ($_GET['search']) {
@@ -57,6 +57,11 @@ class JadwalM extends Model
         } else {
             $this->orderBy('id', 'asc');
         }
+
+        $this->select('jadwal.*, p.nama_penjabat, mk.nama_mk, k.nama_kelas');
+        $this->join('penjabat p', 'p.id=jadwal.dosen_id');
+        $this->join('mata_kuliah mk', 'mk.id=jadwal.mk_id');
+        $this->join('kelas k', 'k.id=jadwal.kelas_id');
     }
     public function get_datatables()
     {

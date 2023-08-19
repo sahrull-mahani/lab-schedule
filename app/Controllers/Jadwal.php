@@ -27,10 +27,10 @@ class Jadwal extends BaseController
             $row = array();
             $row['id'] = $rows->id;
             $row['nomor'] = $no++;
-            $row['dosen_id'] = $rows->dosen_id;
-            $row['mk_id'] = $rows->mk_id;
-            $row['kelas_id'] = $rows->kelas_id;
-            $row['lab_id'] = $rows->lab_id;
+            $row['dosen_id'] = $rows->nama_penjabat;
+            $row['mk_id'] = $rows->nama_mk;
+            $row['kelas_id'] = $rows->nama_kelas;
+            $row['lab_id'] = $rows->nama_lab;
             $row['waktu_mulai'] = $rows->waktu_mulai;
             $row['waktu_selesai'] = $rows->waktu_selesai;
             $row['hari'] = $rows->hari;
