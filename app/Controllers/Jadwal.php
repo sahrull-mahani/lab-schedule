@@ -2,14 +2,22 @@
 
 namespace App\Controllers;
 
+use App\Models\DosenM;
 use App\Models\JadwalM;
+use App\Models\KelasM;
+use App\Models\LaboratoriumM;
+use App\Models\Mata_kuliahM;
 
 class Jadwal extends BaseController
 {
-    protected $jadwalm, $data, $session;
+    protected $jadwalm, $data, $session, $dosenm, $mkm, $kelasm, $labm;
     function __construct()
     {
         $this->jadwalm = new JadwalM();
+        $this->dosenm = new DosenM();
+        $this->mkm = new Mata_kuliahM();
+        $this->kelasm = new KelasM();
+        $this->labm = new LaboratoriumM();
     }
     public function index()
     {
@@ -49,6 +57,10 @@ class Jadwal extends BaseController
         $num_of_row = $this->request->getPost('num_of_row');
         for ($x = 1; $x <= $num_of_row; $x++) {
             $data['nama'] = 'Data ' . $x;
+            $data['dosen'] = $this->dosenm->where('jabatan', 'dosen')->findAll();
+            $data['matakuliah'] = $this->mkm->findAll();
+            $data['kelas'] = $this->kelasm->findAll();
+            $data['laboratorium'] = $this->labm->findAll();
             $this->data['form_input'][] = view('App\Views\jadwal\form_input', $data);
         }
         $status['html']         = view('App\Views\jadwal\form_modal', $this->data);
@@ -65,6 +77,10 @@ class Jadwal extends BaseController
             $data = array(
                 'nama' => '<b>' . $get->nama . '</b>',
                 'get' => $get,
+                'dosen' => $this->dosenm->where('jabatan', 'dosen')->findAll(),
+                'matakuliah' => $this->mkm->findAll(),
+                'kelas' => $this->kelasm->findAll(),
+                'laboratorium' => $this->labm->findAll(),
             );
             $this->data['form_input'][] = view('App\Views\jadwal\form_input', $data);
         }

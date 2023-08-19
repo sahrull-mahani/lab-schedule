@@ -443,7 +443,6 @@ class IonAuthModel
 			'userLevelId'         => $user->group_id,
 			'user_id'             => $user->id, //everyone likes to overwrite id so we'll use user_id
 			'id_peg'              => isset($user->id_peg) ? $user->id_peg : '', //everyone likes to overwrite id so we'll use user_id
-			// 'skpd_id'             => isset($user->skpd_id) ? $user->skpd_id : '', //everyone likes to overwrite id so we'll use user_id
 			'old_last_login'      => date('d-M-Y H:i:s', $user->last_login),
 			'last_check'          => time(),
 			'thumb'       		  => ($user->img != '') ? (file_exists(base_url("thumb/$user->img")) ? base_url("thumb/$user->img") : base_url('/assets/dist/img/profile.jpg')) : base_url('/assets/dist/img/profile.jpg'),
