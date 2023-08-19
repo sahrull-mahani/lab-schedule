@@ -25,7 +25,8 @@
                             <th data-field="state" data-checkbox="true"></th>
                             <th data-field="id" data-visible="false">ID</th>
                             <th data-field="nomor">No</th>
-                            <th data-field="nama_mk">Mata Kuliah</th>
+                            <th data-field="kode_mk">Kode Mata Kuliah</th>
+                            <th data-field="nama_mk">Nama Mata Kuliah</th>
                         </tr>
                     </thead>
                 </table>

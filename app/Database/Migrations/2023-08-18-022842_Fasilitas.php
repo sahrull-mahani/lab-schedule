@@ -10,7 +10,7 @@ class Fasilitas extends Migration
     {
         $this->forge->addField([
             'id' => ['type' => 'int', 'constraint' => 6, 'unsigned' => true, 'auto_increment' => true],
-            'lab' => ['type' => 'enum', 'constraint' => ['A','B']],
+            'lab_id' => ['type' => 'int', 'constraint' => 6, 'unsigned' => true],
             'nama_fasilitas' => ['type' => 'char', 'constraint' => 100],
             'jumlah' => ['type' => 'tinyint', 'constraint' => 25],
             'status' => ['type' => 'enum', 'constraint' => ['layak','tidak layak']],
@@ -20,6 +20,7 @@ class Fasilitas extends Migration
             'deleted_at' => ['type' => 'date', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
+        $this->forge->addForeignKey('lab_id', 'laboratorium', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('fasilitas', true);
     }
 
