@@ -244,11 +244,7 @@ var $remove = $('#remove')
 var $unverifikasi = $('#unverifikasi')
 var $edit = $('#edit')
 var $detail = $('#detail')
-var $kirim = $('#kirim')
-var $verifikasi = $('#verifikasi')
 var $approve = $('#approve')
-var $bulan = $('#bulan')
-var $print = $('#print')
 var $pdf = $('#pdf')
 var $edit_user = $('#edit-user')
 var $restore = $('#restore')
@@ -417,25 +413,15 @@ function readFile(url) {
         $("#spinner").hide();
     });
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        console.log($table.bootstrapTable('getSelections'))
         $remove.prop('disabled', !$table.bootstrapTable('getSelections').length)
-        $unverifikasi.prop('disabled', !$table.bootstrapTable('getSelections').length)
+        $approve.prop('disabled', !$table.bootstrapTable('getSelections').length)
         $edit.prop('disabled', !$table.bootstrapTable('getSelections').length)
         $detail.prop('disabled', !$table.bootstrapTable('getSelections').length)
         $pdf.prop('disabled', !$table.bootstrapTable('getSelections').length)
         $restore.prop('disabled', !$table.bootstrapTable('getSelections').length)
         $edit_user.prop('disabled', !$table.bootstrapTable('getSelections').length)
-        if ($(this).data('method') != 'verifikasi' || $(this).data('method') != 'approve') {
-            $kirim.prop('disabled', !$table.bootstrapTable('getSelections').length)
-        }
     })
-    // $table.on('post-body.bs.table', function() {
-    //     $(':checkbox').each(function () {
-    //         if (!$(this).parent().hasClass('checkbox')) {
-    //           $(this).wrap('<label class="checkbox"></label>').radiocheck()
-    //         }
-    //       })
-    //       $('.dropdown-toggle').dropdown()
-    // })
     $('.create').bind('click', function (e) {
         e.preventDefault()
         $.ajax({
@@ -470,10 +456,17 @@ function readFile(url) {
             dataType: "html",
             success: function (response) {
                 var data = $.parseJSON(response);
-                $('#modal_content').modal('show')
-                $('.isi-modal').html(data.html)
-                $('.modal-title').html(data.modal_title)
-                $('#modal-size').addClass(data.modal_size)
+                if (data.html == 400) {
+                    Lobibox.notify('warning', {
+                        position: 'top right',
+                        msg: data.pesan
+                    })
+                }else{
+                    $('#modal_content').modal('show')
+                    $('.isi-modal').html(data.html)
+                    $('.modal-title').html(data.modal_title)
+                    $('#modal-size').addClass(data.modal_size)
+                }
             },
             error: function (jqXHR, exception, thrownError) {
                 ajax_error_handling(jqXHR, exception, thrownError);
@@ -504,240 +497,56 @@ function readFile(url) {
         });
     });
 
-    $kirim.bind('click', function (e) {
-        e.preventDefault()
+    $approve.click(function () {
+        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        })
+        var kelas = $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.kelas_id
+        })
         Swal.fire({
-            title: $(this).data('title'),
-            text: $(this).data('message'),
-            icon: 'question',
+            title: 'Hapus Data?',
+            text: 'Anda Yakin Akan Menghapus Data ' + kelas + '?',
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: `Ya, ${$(this).text()}!`
+            showDenyButton: true,
+            confirmButtonColor: '#4CAF50',
+            cancelButtonColor: '#7b809a',
+            denyButtonText: 'Tolak',
+            confirmButtonText: 'Setujui!'
         }).then((result) => {
             if (result.isConfirmed) {
-                var alldata = $.map($table.bootstrapTable('getSelections'), function (row) {
-                    return row
-                })
-                if ($(this).data('method') == 'verifikasi' || $(this).data('method') == 'approve') {
-                    var alldata = $.map($table.bootstrapTable('getData'), function (row) {
-                        return row.id
-                    })
-                }
-                $.ajax({
-                    url: url + 'save',
-                    type: 'POST',
-                    context: this,
+                $.post({
+                    url: location.origin + '/jadwal/save',
                     data: {
-                        data: alldata,
-                        bahan: $('#bahan').val(),
-                        action: $(this).data('method')
+                        action: 'approve',
+                        id: ids,
+                        status: ['setuju']
                     },
-                    dataType: "html",
-                    success: function (response) {
-                        var data = $.parseJSON(response);
-                        Lobibox.notify(data.type, {
+                    dataType: 'json',
+                    success: function (res) {
+                        Lobibox.notify(res.type, {
                             position: 'top right',
-                            msg: data.text
+                            msg: res.text
                         })
                         $('#table').bootstrapTable('refresh')
-                        $kirim.prop('disabled', true)
-                    },
-                    error: function (jqXHR, exception, thrownError) {
-                        ajax_error_handling(jqXHR, exception, thrownError)
-                        $kirim.prop('disabled', true)
                     }
                 })
-            }
-        })
-    })
-
-    $pdf.bind('click', function (e) {
-        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
-            return row.id
-        })
-        $.ajax({
-            url: url + $(this).attr('method'),
-            type: 'post',
-            data: {
-                id: ids
-            },
-            dataType: "html",
-            success: function (response) {
-                // var data = $.parseJSON(response);
-                // $('#modal_content').modal({
-                //     backdrop: 'static'
-                // })
-                // $('.isi-modal').html(data.html)
-                // $('.modal-title').html(data.modal_title)
-                // $('#modal-size').addClass(data.modal_size)
-            },
-            error: function (jqXHR, exception, thrownError) {
-                ajax_error_handling(jqXHR, exception, thrownError);
-            }
-        });
-    });
-
-    $bulan.val() == 'none' ? $verifikasi.attr('disabled', true) : $verifikasi.removeAttr('disabled')
-    $bulan.on('change', function () {
-        $(this).val() == 'none' ? $verifikasi.attr('disabled', true) : $verifikasi.removeAttr('disabled')
-    })
-    $verifikasi.click(function () {
-        var months = $.map($table.bootstrapTable('getData'), function (row) {
-            return row.bulan
-        })
-        Swal.fire({
-            title: 'Verifikasi?',
-            text: 'Anda Yakin Verifikasi Data Ini?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, setujui!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url + 'save',
-                    type: 'post',
+            } else if (result.isDenied) {
+                $.post({
+                    url: location.origin + '/jadwal/save',
                     data: {
-                        data: months,
-                        action: 'verify'
-                    },
-                    success: function (response) {
-                        var data = $.parseJSON(response);
-                        Lobibox.notify(data.type, {
-                            position: 'top right',
-                            msg: data.text
-                        })
-                        $('#table').bootstrapTable('refresh');
-                        $verifikasi.prop('disabled', true)
-                    }, error: function (jqXHR, exception, thrownError) {
-                        ajax_error_handling(jqXHR, exception, thrownError);
-                        $verifikasi.prop('disabled', true)
-                    }
-                })
-            }
-        })
-    })
-    $bulan.val() == 'none' ? $approve.attr('disabled', true) : $approve.removeAttr('disabled')
-    $bulan.find(":selected").text().indexOf("✔") != '-1' ? $approve.attr('disabled', true) : $approve.removeAttr('disabled')
-    $bulan.find(":selected").text().indexOf("✔") == '-1' ? $print.attr('disabled', true) : $print.removeAttr('disabled')
-    $bulan.find(":selected").text().indexOf("✔") == '-1' ? $print.find('i').removeClass('text-white') : $print.find('i').addClass('text-white')
-    $bulan.on('change', function () {
-        $(this).val() == 'none' ? $approve.attr('disabled', true) : $approve.removeAttr('disabled')
-        $(this).find(":selected").indexOf("✔") ? $approve.attr('disabled', true) : $approve.removeAttr('disabled')
-        $(this).find(":selected").indexOf("✔") ? $print.attr('disabled', true) : $print.removeAttr('disabled')
-    })
-    $approve.click(function () {
-        var months = $.map($table.bootstrapTable('getData'), function (row) {
-            return row.bulan
-        })
-        Swal.fire({
-            title: 'Approve?',
-            text: 'Anda Yakin Setujui Laporan Ini?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, setujui!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url + 'save',
-                    type: 'post',
-                    data: {
-                        data: months,
-                        action: 'approve'
-                    },
-                    success: function (response) {
-                        var data = $.parseJSON(response);
-                        Lobibox.notify(data.type, {
-                            position: 'top right',
-                            msg: data.text
-                        })
-                        if (data.type == 'success') {
-                            var $bulanselected = $bulan.find(":selected")
-                            $bulanselected.text(`${$bulanselected.text()} ✔`)
-                            $print.removeAttr('disabled')
-                            $approve.attr('disabled', true)
-                        }
-                        $('#table').bootstrapTable('refresh');
-                        $approve.prop('disabled', true)
-                    }, error: function (jqXHR, exception, thrownError) {
-                        ajax_error_handling(jqXHR, exception, thrownError);
-                        $approve.prop('disabled', true)
-                    }
-                })
-            }
-        })
-    })
-    $print.click(function () {
-        Swal.fire({
-            title: 'Print?',
-            text: 'Anda Yakin print Laporan Ini?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, cetak!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let myurl = url + 'printpdf/' + $('#tahun').find(":selected").val() + '/' + $bulan.find(":selected").val() + '/' + $('#kecamatan option:selected').text()
-                swin = window.open(myurl, 'win', 'scrollbars,width=1000,height=600,top=80,left=140,status=yes,toolbar=no,menubar=yes,location=no')
-                swin.focus()
-            }
-        })
-    })
-    $('#single-print').on('click', function () {
-        Swal.fire({
-            title: $(this).data('title'),
-            text: $(this).data('message'),
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: $(this).text()
-        }).then((result) => {
-            let selectbahan = $('#select-bahan option:selected').toArray().map(item => item.value)
-            if (result.isConfirmed) {
-                let myurl = url + 'printpdf/' + $('#tahun').find(":selected").val() + '/' + $('#month').find(":selected").val() + '/' + selectbahan.join(',')
-                swin = window.open(myurl, 'win', 'scrollbars,width=1000,height=600,top=80,left=140,status=yes,toolbar=no,menubar=yes,location=no')
-                swin.focus()
-            }
-        })
-    })
-    $unverifikasi.click(function () {
-        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
-            return row.id
-        })
-        Swal.fire({
-            title: 'Kembalikan?',
-            text: 'Anda Yakin Akan Mengembalikan Data?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, Kembalikan!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url + 'save',
-                    type: 'post',
-                    data: {
+                        action: 'approve',
                         id: ids,
-                        action: 'unverifikasi'
+                        status: ['tidak setuju']
                     },
-                    success: function (response) {
-                        var data = $.parseJSON(response);
-                        Lobibox.notify(data.type, {
+                    dataType: 'json',
+                    success: function (res) {
+                        Lobibox.notify(res.type, {
                             position: 'top right',
-                            msg: data.text
+                            msg: res.text
                         })
-                        $('#table').bootstrapTable('refresh');
-                        $unverifikasi.prop('disabled', true)
-                    }, error: function (jqXHR, exception, thrownError) {
-                        ajax_error_handling(jqXHR, exception, thrownError);
-                        $unverifikasi.prop('disabled', true)
+                        $('#table').bootstrapTable('refresh')
                     }
                 })
             }

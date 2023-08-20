@@ -13,9 +13,10 @@
             <div id="toolbar">
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <input type="number" class="btn btn-default border" style="width: 100px;" value="1" min="1" id="number-of-row">
-                    <button type="button" class="btn btn-primary create" method="create" data-toggle="modal"><i class="fa fa-plus"></i> Tambah Data</button>
-                    <button type="button" class="btn btn-warning" id="edit" method="edit" disabled><i class="fa fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-primary create" method="create" data-toggle="modal"><i class="fa fa-plus"></i> Tambah Jadwal</button>
+                    <button type="button" class="btn btn-warning" id="edit" method="edit" disabled><i class="fa fa-edit"></i> Rubah Jadwal</button>
                     <button type="button" class="btn btn-danger" id="remove" disabled><i class="fa fa-trash"></i> Hapus</button>
+                    <button type="button" class="btn btn-success" id="approve" disabled><i class="fa fa-check"></i> Setujui</button>
                 </div>
             </div>
             <div class="table-responsive p-0">
@@ -31,6 +32,7 @@
                             <th data-field="lab_id">Laboratorium</th>
                             <th data-field="waktu_mulai">Waktu Mulai</th>
                             <th data-field="waktu_selesai">Waktu Selesai</th>
+                            <th data-field="status">Status</th>
                             <th data-field="hari">Hari</th>
                         </tr>
                     </thead>

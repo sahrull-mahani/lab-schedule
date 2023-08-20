@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class JadwalM extends Model
 {
     protected $table = 'jadwal';
-    protected $allowedFields = array('dosen_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari');
+    protected $allowedFields = array('dosen_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari', 'status');
     protected $returnType     = 'object';
     protected $useSoftDeletes = false;
 
@@ -37,7 +37,7 @@ class JadwalM extends Model
     ];
     private function _get_datatables()
     {
-        $column_search = array('nama_penjabat', 'nama_mk', 'nama_kelas', 'nama_lab', 'waktu_mulai', 'waktu_selesai', 'hari');
+        $column_search = array('nama_penjabat', 'nama_mk', 'nama_kelas', 'nama_lab', 'waktu_mulai', 'waktu_selesai', 'hari', 'status');
         $i = 0;
         foreach ($column_search as $item) { // loop column 
             if ($_GET['search']) {
@@ -58,10 +58,11 @@ class JadwalM extends Model
             $this->orderBy('id', 'asc');
         }
 
-        $this->select('jadwal.*, p.nama_penjabat, mk.nama_mk, k.nama_kelas');
+        $this->select('jadwal.*, p.nama_penjabat, mk.nama_mk, k.nama_kelas, l.nama_lab');
         $this->join('penjabat p', 'p.id=jadwal.dosen_id');
         $this->join('mata_kuliah mk', 'mk.id=jadwal.mk_id');
         $this->join('kelas k', 'k.id=jadwal.kelas_id');
+        $this->join('laboratorium l', 'l.id=jadwal.lab_id');
     }
     public function get_datatables()
     {

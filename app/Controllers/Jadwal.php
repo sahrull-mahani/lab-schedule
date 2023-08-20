@@ -31,7 +31,19 @@ class Jadwal extends BaseController
         $list = $this->jadwalm->get_datatables();
         $data = array();
         $no = isset($_GET['offset']) ? $_GET['offset'] + 1 : 1;
+        $color = '';
         foreach ($list as $rows) {
+            switch ($rows->status) {
+                case 'setuju':
+                    $color = 'success';
+                    break;
+                case 'tidak setuju':
+                    $color = 'danger';
+                    break;
+                case 'belum disetujui':
+                    $color = 'secondary';
+                    break;
+            }
             $row = array();
             $row['id'] = $rows->id;
             $row['nomor'] = $no++;
@@ -42,6 +54,7 @@ class Jadwal extends BaseController
             $row['waktu_mulai'] = $rows->waktu_mulai;
             $row['waktu_selesai'] = $rows->waktu_selesai;
             $row['hari'] = $rows->hari;
+            $row['status'] = "<span class='fw-bold rounded px-1 bg-$color text-white'>$rows->status</span>";
             $data[] = $row;
         }
         $output = array(
@@ -73,9 +86,12 @@ class Jadwal extends BaseController
         $id = $this->request->getPost('id');
         $this->data = array('action' => 'update', 'btn' => '<i class="fas fa-edit"></i> Edit');
         foreach ($id as $ids) {
-            $get = $this->jadwalm->find($ids);
+            $get = $this->jadwalm->join('kelas k', 'k.id=jadwal.kelas_id')->find($ids);
+            if ($get->status == 'setuju') {
+                return json_encode(['html'=>400, 'pesan'=>'data telah di setujui']);
+            }
             $data = array(
-                'nama' => '<b>' . $get->nama . '</b>',
+                'nama' => '<b>' . $get->nama_kelas . '</b>',
                 'get' => $get,
                 'dosen' => $this->dosenm->where('jabatan', 'dosen')->findAll(),
                 'matakuliah' => $this->mkm->findAll(),
@@ -93,7 +109,7 @@ class Jadwal extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('nama');
+                $nama = $this->request->getPost('id');
                 $data = array();
                 foreach ($nama as $key => $val) {
                     array_push($data, array(
@@ -136,6 +152,24 @@ class Jadwal extends BaseController
                 } else {
                     $status['type'] = 'error';
                     $status['text'] = $this->jadwalm->errors();
+                }
+                echo json_encode($status);
+                break;
+            case 'approve':
+                $id = $this->request->getPost('id');
+                $data = array();
+                foreach ($id as $key => $val) {
+                    array_push($data, array(
+                        'id' => $val,
+                        'status' => $this->request->getPost('status')[$key],
+                    ));
+                }
+                if ($this->jadwalm->updateBatch($data, 'id')) {
+                    $status['type'] = 'success';
+                    $status['text'] = 'Data Jadwal Berhasil Disetujui';
+                } else {
+                    $status['type'] = 'error';
+                    $status['text'] = 'Gagal merubah status jadwal';
                 }
                 echo json_encode($status);
                 break;
