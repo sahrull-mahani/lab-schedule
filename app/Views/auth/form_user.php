@@ -3,19 +3,19 @@
     <?= form_label(lang('Auth.create_user_name_label'), 'id_peg', array("class" => "col-sm-3 col-form-label")); ?>
     <div class="input-group input-group-outline mb-3">
         <?php $defaults = array('none' => 'Pilih Pegawai');
-        $dd = $action !== 'update' ? ddNotInUser() :  pegawai();
-        echo form_dropdown('id_peg', $defaults + $dd, isset($user->id_peg) ? $user->id_peg : '', 'class="form-control" id="id_peg"'); ?>
+        $dd = $action !== 'update' ? ddNotInUser() : pegawai();
+        echo form_dropdown('id_peg', $defaults + $dd, isset($user->id_peg) ? $user->id_peg : '', 'class="form-control" id="id_peg" required'); ?>
     </div>
-    <?php if ($identity_column !== 'email') { ?>
+    <?php if ($identity_column !== 'email') : ?>
         <?= form_label(lang('Auth.create_user_identity_label'), 'identity', array("class" => "col-sm-3 col-form-label")); ?>
         <div class="input-group input-group-outline mb-3">
-            <input type="text" name="identity" value="<?= isset($user->username) ? $user->username : ''; ?>" id="identity" class="form-control" required="required" />
+            <input type="text" name="identity" value="<?= @$user->username ?>" id="identity" class="form-control disabled" readonly required />
         </div>
         <?= '<p>' . \Config\Services::validation()->getError('identity') . '</p>'; ?>
-    <?php } ?>
-    <?= form_label(lang('Auth.create_user_phone_label'), 'phone', array("class" => "col-sm-3 col-form-label")); ?>
+    <?php endif ?>
+    <?= form_label(lang('Auth.create_user_email_label'), 'email', array("class" => "col-sm-3 col-form-label")); ?>
     <div class="input-group input-group-outline mb-3">
-        <input type="email" name="email" value="<?= isset($user->email) ? $user->email : ''; ?>" id="email" class="form-control" required="required" />
+        <input type="email" name="email" value="<?= isset($user->email) ? $user->email : ''; ?>" id="email" class="form-control" required />
     </div>
     <?= form_label(lang('Auth.create_user_phone_label'), 'phone', array("class" => "col-sm-3 col-form-label")); ?>
     <div class="input-group input-group-outline mb-3">
@@ -58,6 +58,22 @@
 </div>
 <?= form_close(); ?>
 <script type="text/javascript">
+    function pad(str, max) {
+        str = str.toString();
+        return str.length < max ? pad("0" + str, max) : str;
+    }
+    $('#id_peg').on('change', function() {
+        let val = $(this).val()
+        $.get({
+            url: location.origin + '/auth/getpegawai/' + val,
+            dataType: 'json',
+            context: this,
+            success: function(res) {
+                $('#identity').val(res.nomor_induk)
+                $('#email').val(`${res.nama_penjabat.replace(/ /g, '-')}${pad(val, 2)}@gmail.com`)
+            }
+        })
+    })
     $('form').on('blur', 'input[required], input.optional, select.required', validator.checkField).on('change',
         'select.required', validator.checkField).on('keypress', 'input[required][pattern]', validator.keypress);
     $('.multi.required').on('keyup blur', 'input', function() {

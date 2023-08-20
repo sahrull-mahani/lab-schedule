@@ -214,10 +214,10 @@ function rerupiah($angka)
 function pegawai()
 {
     $db = db_connect();
-    $query = $db->table('pegawai')->select('pegawai.*')->join('users', 'users.id_peg = pegawai.id')->where('deleted_at', null)->get();
+    $query = $db->table('penjabat')->select('penjabat.*')->join('users', 'users.id_peg = penjabat.id')->where('deleted_at', null)->get();
     if ($query->getNumRows() !== 0) {
         foreach ($query->getResult() as $row) {
-            $isi[$row->id] = $row->nama;
+            $isi[$row->id] = $row->nama_penjabat;
         }
     } else {
         $isi[''] = "Tidak Ada Data";
@@ -227,99 +227,19 @@ function pegawai()
 function ddNotInUser()
 {
     $db = \Config\Database::connect();
-    $query = $db->query("SELECT * FROM pegawai WHERE id NOT IN (SELECT id_peg FROM users WHERE id_peg IS NOT NULL) AND deleted_at IS NULL");;
+    $query = $db->query("SELECT * FROM penjabat WHERE id NOT IN (SELECT id_peg FROM users WHERE id_peg IS NOT NULL) AND deleted_at IS NULL");;
     if ($query->getNumRows() !== 0) {
         foreach ($query->getResult() as $row) {
-            $isi[$row->id] = $row->nama;
+            $isi[$row->id] = $row->nama_penjabat;
         }
     } else {
         $isi[''] = "Tidak Ada Data";
     }
     return $isi;
 }
-function pegawaiById($id)
+function pegawaiByID($id)
 {
-    $db = \Config\Database::connect();
-    $query = $db->query("SELECT * FROM pegawai WHERE id=$id AND deleted_at IS NULL");
-    if ($query->getNumRows() !== 0) {
-        return $query->getRow();
-    } else {
-        return "Tidak Ada Data";
-    }
-}
-function jabatan()
-{
-    $db = \Config\Database::connect();
-    $query = $db->query('SELECT * FROM jabatan');
-    if ($query->getNumRows() !== 0) {
-        foreach ($query->getResult() as $row) {
-            $isi[$row->id] = $row->nama;
-        }
-    } else {
-        $isi[''] = "Tidak Ada Data";
-    }
-    return $isi;
-}
-// function skpd()
-// {
-//     $db = \Config\Database::connect();
-//     $query = $db->query('SELECT * FROM skpd');
-//     if ($query->getNumRows() !== 0) {
-//         foreach ($query->getResult() as $row) {
-//             $isi[$row->id] = $row->nama;
-//         }
-//     } else {
-//         $isi[''] = "Tidak Ada Data";
-//     }
-//     return $isi;
-// }
-function jenisSetting($action)
-{
-    $query = ($action == 'update') ? 'SELECT * FROM jenis_setting' : 'SELECT * FROM jenis_setting WHERE id NOT IN (SELECT js_id FROM setting)';
-    $db = \Config\Database::connect();
-    $query = $db->query($query);
-    if ($query->getNumRows() !== 0) {
-        foreach ($query->getResult() as $row) {
-            $isi[$row->id] = $row->nama;
-        }
-    } else {
-        $isi[''] = "Tidak Ada Data";
-    }
-    return $isi;
-}
-function jenisKaryawan($id)
-{
-    $arr = ['1', '2', '3', '4', '5'];
-    if (in_array((string)$id, $arr)) {
-        return 'pegawai';
-    }
-    return 'ta';
-}
-function getPresensi($pegawaiId, $tgl)
-{
-    $db = \Config\Database::connect();
-    $builder = $db->table('presensi');
-    $builder->where('pegawai_id', $pegawaiId);
-    $builder->where('tgl', $tgl);
-    return $builder->get()->getRow();
-}
-
-function getIdByUserID($id, $table)
-{
-    $db = db_connect();
-    return $db->table($table)->where('user_id', $id)->get()->getRow();
-}
-
-function getApi($url)
-{
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    $result = curl_exec($curl);
-    curl_close($curl);
-
-    $result = json_decode($result, true);
-    return $result;
+    return db_connect()->table('penjabat')->getWhere(['id' => $id])->getRow();
 }
 
 function get_visitor_for_today()
@@ -360,19 +280,6 @@ function get_total_hit()
     $query = $db->query('SELECT SUM(no_of_visits) as hits FROM visitors')->getRow();
     return $query->hits;
 }
-function getCountBerita($like)
-{
-    $db = db_connect();
-    // $query = $db->query('SELECT SUM(no_of_visits) as hits FROM visitors WHERE requested_url LIKE ')->getRow();
-    $query = $db->table('visitors')->selectSum('no_of_visits', 'hits')->like('requested_url', $like)->get()->getRow();
-    return $query->hits;
-}
-
-function getPegawai($id)
-{
-    $db = db_connect();
-    return $db->table('pegawai')->where('id', $id)->get()->getRow();
-}
 
 function namaAkun($nama)
 {
@@ -387,52 +294,6 @@ function namaAkun($nama)
     }
 
     return $nama;
-}
-function getJabatan($string)
-{
-    switch ($string) {
-        case "kadis":
-            return ['1.0.0'];
-            break;
-        case "sekertaris":
-            return ['2.0.0'];
-            break;
-        case "kabid":
-            for ($i = 3; $i <= 9; $i++) {
-                $jab[] = "$i.0.0";
-            }
-            return $jab;
-            break;
-        default:
-            for ($i = 1; $i <= 9; $i++) {
-                $jab[] = "$i.0.0";
-            }
-            return $jab;
-            break;
-    }
-}
-function getLevel($level, $id)
-{
-    $lvl = (int)str_replace('.', '', $level);
-    if ($level == '1.0.0') {
-        return [1, 0, null]; //KADIS
-    } else if ($lvl == 200) {
-        return [2, 1, ['assistant']]; // SEKERTARIS
-    } else if ($lvl > 200 && $lvl < 300) { // DIBAWAH SEK KASUBAG
-        return [(int)(explode('.', $level)[0] . $id), 2, ['right-partner']];
-    } else if ((int)explode('.', $level)[0] > 2 && (int)explode('.', $level)[1] == 0 && (int)explode('.', $level)[2] == 0) {
-        return [(int)explode('.', $level)[0], 1, null]; //KABID
-    } else if ((int)explode('.', $level)[0] > 2 && (int)explode('.', $level)[1] != 0 && (int)explode('.', $level)[2] == 0) {
-        return [(int)(explode('.', $level)[0] . explode('.', $level)[1] . $id), (int)explode('.', $level)[0], null]; //KASIE
-    } else if ((int)explode('.', $level)[0] > 2 && (int)explode('.', $level)[1] != 0 && (int)explode('.', $level)[2] != 0) {
-        return [(int)(explode('.', $level)[0] . explode('.', $level)[1] . explode('.', $level)[2]), (int)(explode('.', $level)[0] . explode('.', $level)[1] . $id - explode('.', $level)[2]), null]; //staff dibawah kasie
-    } else {
-        return [(int)(explode('.', $level)[0] . explode('.', $level)[1] . explode('.', $level)[2]), (int)explode('.', $level)[0], null]; //staff
-    }
-}
-function clearLink($text)
-{
-    return str_replace('ppid.bolmutkab.go.id —–» ', '', strip_tags($text));
 }
 function get_client_ip()
 {
@@ -452,15 +313,6 @@ function get_client_ip()
     else
         $ipaddress = 'UNKNOWN';
     return $ipaddress;
-}
-
-function getCreateUpdate($created, $updated)
-{
-    if ($created == $updated) {
-        return ['Dibuat', $created];
-    } else {
-        return ['Diperbaharui', $updated];
-    }
 }
 
 function getFullName($nama)

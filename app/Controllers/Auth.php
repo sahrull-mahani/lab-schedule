@@ -184,10 +184,16 @@ class Auth extends BaseController
                     if (!$nama) {
                         $additionalData = [
                             'id_peg' => ($id_peg != 'none') ? $id_peg : null,
-                            'nama_user' => ($id_peg != 'none') ? pegawaiById($id_peg)->nama : $identity,
+                            'nama_user' => ($id_peg != 'none') ? pegawaiByID($id_peg)->nama_penjabat : $identity,
                             'phone' => $this->request->getPost('phone'),
                         ];
-                        $groups = [3];
+                        if (pegawaiByID($id_peg)->jabatan == 'dosen') {
+                            $groups = [3];
+                        } elseif (pegawaiByID($id_peg)->jabatan == 'mahasiswa') {
+                            $groups = [4];
+                        } else {
+                            $groups = [2];
+                        }
                     } else {
                         $additionalData = [
                             'id_peg'    => null,
@@ -1017,5 +1023,10 @@ class Auth extends BaseController
             return redirect()->to('auth');
         }
         return redirect()->to('admin');
+    }
+
+    public function getpegawai($id)
+    {
+        return json_encode(pegawaiByID($id));
     }
 }

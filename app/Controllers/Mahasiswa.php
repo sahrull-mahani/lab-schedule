@@ -141,6 +141,7 @@ class Mahasiswa extends BaseController
                         'tgl_lahir' => get_format_date_sql($this->request->getPost('tgl_lahir')[$key]),
                         'alamat' => $this->request->getPost('alamat')[$key],
                     ));
+                    db_connect()->table('users')->where('id_peg', $val)->set('username', $nim)->update();
                 }
                 if (session()->getFlashdata('errorNIM')) {
                     $status['type'] = 'error';

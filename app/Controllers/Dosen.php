@@ -144,6 +144,7 @@ class Dosen extends BaseController
                         'pendidikan' => $this->request->getPost('pendidikan')[$key],
                         'lulusan' => $this->request->getPost('lulusan')[$key],
                     ));
+                    db_connect()->table('users')->where('id_peg', $val)->set('username', $nidn)->update();
                 }
                 if (session()->getFlashdata('errorNIDN')) {
                     $status['type'] = 'error';
