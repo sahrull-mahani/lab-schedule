@@ -360,23 +360,13 @@ $('#save-profile').submit(function (e) {
         url: $(this).attr('action'),
         type: 'post',
         data: $(this).serialize(),
-        // data: new FormData(this),
-        // processData:false,
-        // contentType:false,
-        // cache:false,
-        // async:false,
-        success: function (response) {
-            var data = $.parseJSON(response);
-            // Swal.fire({title:data.title,html:data.text,type:data.type}).then((result) => {
-            //     var url = window.location.href;     // Returns full URL
-            //     window.location.replace(url);
-            // })
+        dataType: 'json',
+        success: function (data) {
             Lobibox.notify(data.type, {
                 position: 'top right',
                 msg: data.text,
                 icon: data.type
             })
-            window.location.replace(window.location.href)
         }, error: function (jqXHR, exception, thrownError) {
             ajax_error_handling(jqXHR, exception, thrownError);
         }
@@ -391,7 +381,6 @@ $('#save-account').submit(function (e) {
         success: function (response) {
             var data = $.parseJSON(response);
             Swal.fire({ title: data.title, html: data.text, type: data.type }).then((result) => {
-                var url = window.location.href;     // Returns full URL
                 window.location.replace(window.location.href)
             });
             // Lobibox.notify(data.type, {

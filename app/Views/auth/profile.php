@@ -22,10 +22,10 @@
             <div class="col-auto my-auto">
                 <div class="h-100">
                     <h5 class="mb-1">
-                        Richard Davis
+                        <?= ucwords(namaAkun(session('nama_user'))) ?>
                     </h5>
                     <p class="mb-0 font-weight-normal text-sm">
-                        CEO / Co-Founder
+                        <?= session('userlevel') ?>
                     </p>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                                 <span class="ms-1">Manage Account</span>
                             </a>
                         </li>
-                        <?php if (!is_admin()) : ?>
+                        <?php if (session('user_id') > 1) : ?>
                             <li class="nav-item">
                                 <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#profile-tab-pane" role="tab" aria-selected="false">
                                     <i class="material-icons text-lg position-relative">person</i>
@@ -92,48 +92,39 @@
                 </div>
                 <!-- END Management Account -->
 
-                <?php if (!is_admin()) : ?>
+                <?php if (session('user_id') > 1) : ?>
                     <!-- Profile -->
                     <div class="tab-pane fade show" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                        <?= form_open("pegawai/save", array("class" => "form-horizontal", "id" => "save-profile")) ?>
-                        <label for="nama">Nama</label>
-                        <div class="input-group input-group-outline mb-3">
-                            <input type="text" class="form-control" id="nama" name="nama[]" value="<?= (isset($get->nama)) ? $get->nama : $get->nama_user; ?>" placeholder="Nama" required />
-                        </div>
-                        <label for="jab_id">Jabatan</label>
-                        <div class="input-group input-group-outline mb-3">
-                            <?php $defaults = array('' => 'Pilih Jabatan');
-                            echo form_dropdown('jab_id[]', $defaults + jabatan(), (isset($get->jab_id)) ? $get->jab_id : '', 'class="form-control" id="jab_id" required'); ?>
-                        </div>
+                        <?= form_open("auth/change_profile", array("class" => "form-horizontal", "id" => "save-profile")) ?>
                         <label for="jk">Jenis Kelamin</label>
                         <div class="input-group input-group-outline mb-3">
-                            <?php $defaults = array('' => '==Pilih Jk==');
+                            <?php $defaults = array('' => '==Pilih Jenis Kelamin==');
                             $options = array(
-                                'Laki-Laki' => 'Laki-Laki',
+                                'Laki-laki' => 'Laki-Laki',
                                 'Perempuan' => 'Perempuan',
                             );
-                            echo form_dropdown('jk[]', $defaults + $options, (isset($get->jk)) ? $get->jk : '', 'class="form-control" id="jk" ');
+                            echo form_dropdown('jk', $defaults + $options, @$get->jk, 'class="form-control" id="jk"');
                             ?>
                         </div>
                         <label for="tempat_lahir">Tempat Lahir</label>
                         <div class="input-group input-group-outline mb-3">
-                            <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir[]" value="<?= (isset($get->tempat_lahir)) ? $get->tempat_lahir : ''; ?>" placeholder="Tempat Lahir" />
+                            <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?= @$get->tempat_lahir ?>" placeholder="Tempat Lahir" />
                         </div>
                         <label for="tgl_lahir">Tanggal Lahir</label>
                         <div class="input-group input-group-outline mb-3">
-                            <input type="text" class="form-control datepicker" id="tgl_lahir" name="tgl_lahir[]" value="<?= (isset($get->tgl_lahir)) ? get_format_date($get->tgl_lahir) : ''; ?>" placeholder="Tgl Lahir" />
+                            <input type="date" class="form-control datepicker" id="tgl_lahir" name="tgl_lahir" value="<?= date('Y-m-d', strtotime($get->tgl_lahir)) ?>" placeholder="Tanggal Lahir" />
                         </div>
                         <label for="gelar_depan">Gelar Depan</label>
                         <div class="input-group input-group-outline mb-3">
-                            <input type="text" class="form-control" id="gelar_depan" name="gelar_depan[]" value="<?= (isset($get->gelar_depan)) ? $get->gelar_depan : ''; ?>" placeholder="Gelar Depan" />
+                            <input type="text" class="form-control" id="gelar_depan" name="gelar_depan" value="<?= @$get->gelar_depan ?>" placeholder="Gelar Depan" />
                         </div>
                         <label for="gelar_belakang">Gelar Belakang</label>
                         <div class="input-group input-group-outline mb-3">
-                            <input type="text" class="form-control" id="gelar_belakang" name="gelar_belakang[]" value="<?= (isset($get->gelar_belakang)) ? $get->gelar_belakang : ''; ?>" placeholder="Gelar Belakang" />
+                            <input type="text" class="form-control" id="gelar_belakang" name="gelar_belakang" value="<?= @$get->gelar_belakang ?>" placeholder="Gelar Belakang" />
                         </div>
                         <label for="alamat">Alamat</label>
                         <div class="input-group input-group-outline mb-3">
-                            <textarea class="form-control" id="alamat" name="alamat[]" placeholder="Alamat"><?= (isset($get->alamat)) ? $get->alamat : ''; ?></textarea>
+                            <textarea class="form-control" id="alamat" name="alamat" placeholder="Alamat"><?= @$get->alamat ?></textarea>
                         </div>
                         <label for="alamat">Pendidikan</label>
                         <div class="input-group input-group-outline mb-3">
@@ -147,15 +138,15 @@
                                 'D1' => 'D1',
                                 'SMA/SMK/MA' => 'SMA/SMK/MA',
                             );
-                            echo form_dropdown('pendidikan[]', $defaults + $options, (isset($get->pendidikan)) ? $get->pendidikan : '', 'class="form-control" id="pendidikan" ');
+                            echo form_dropdown('pendidikan', $defaults + $options, @$get->pendidikan, 'class="form-control" id="pendidikan" ');
                             ?>
                         </div>
                         <label for="lulusan">Lulusan</label>
                         <div class="input-group input-group-outline mb-3">
-                            <input type="text" class="form-control" id="lulusan" name="lulusan[]" value="<?= (isset($get->lulusan)) ? $get->lulusan : ''; ?>" placeholder="Lulusan" />
+                            <input type="text" class="form-control" id="lulusan" name="lulusan" value="<?= @$get->lulusan ?>" placeholder="Lulusan" />
                         </div>
                         <div class="d-flex flex-row-reverse">
-                            <input type="hidden" name="id[]" value="<?= (isset($get->id)) ? $get->id : ''; ?>" />
+                            <input type="hidden" name="id" value="<?= @$get->id ?>" />
                             <input type='hidden' name='action' value='update' />
                             <input type='hidden' name='session' value='true' />
                             <?= form_submit('submit', lang('Auth.edit_user_submit_btn'), ['class' => 'btn btn-primary']); ?>

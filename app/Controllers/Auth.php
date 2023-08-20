@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\DosenM;
 use App\Models\PegawaiM;
 
 class Auth extends BaseController
@@ -813,8 +814,9 @@ class Auth extends BaseController
             $email = strtolower($this->request->getPost('email'));
             $username = strtolower($this->request->getPost('username'));
             $identity = $identityColumn === 'email' ? $email : $username;
+            $nama_user = $this->request->getPost('nama_user');
             $data = [
-                'nama_user' => $this->request->getPost('nama_user'),
+                'nama_user' => $nama_user,
                 'phone' => $this->request->getPost('phone'),
                 'email' => strtolower($email),
                 'username' => strtolower($username),
@@ -843,6 +845,10 @@ class Auth extends BaseController
                     session()->remove('nama_user');
                     session()->set('nama_user', $this->request->getPost('nama_user'));
                 }
+
+                $id_peg = $this->request->getVar('id_peg');
+                if ($id_peg != '')
+                db_connect()->table('penjabat')->where('id', $id_peg)->set('nama_penjabat', $nama_user)->update();
             } else {
                 $status['type'] = 'error';
                 $status['text'] = $this->ionAuth->errors($this->validationListTemplate);
@@ -862,10 +868,11 @@ class Auth extends BaseController
         $this->data['m_profile'] = 'active bg-gradient-primary';
         $this->data['breadcome'] = 'Profile User';
         $this->data['identityColumn'] =  $this->configIonAuth->identity;
-        $pegawai = new PegawaiM();
+        $pegawai = new DosenM();
         $user = $this->ionAuth->user($this->session->user_id);
         $this->data['user'] = $user;
         $this->data['get'] = isset($user->id_peg) ? $pegawai->find($user->id_peg) : $user;
+        // dd($this->data['get']);
 
         $this->data['minPasswordLength'] =
             $this->configIonAuth->minPasswordLength;
@@ -899,51 +906,29 @@ class Auth extends BaseController
         ];
         return view('App\Views\auth\profile', $this->data);
     }
-    public function save_profile()
+    public function change_profile()
     {
-        if (!empty($_FILES['file-img']['name'])) {
-            $file = $this->request->getFile('file-img');
-            $file_name = $file->getRandomName();
-            $file_old = $this->request->getPost('old_foto');
-            if ($this->ionAuth->upload_img($file, $file_name, $file_old)) {
-                $data = ['img' => $file_name];
-                $this->ionAuth->update(
-                    $this->request->getPost('user_id'),
-                    $data
-                );
-                $this->session->remove('foto');
-                $this->session->set(
-                    'foto',
-                    base_url('/assets/img/' . $file_name)
-                );
-            } else {
-                $status['type'] = 'error';
-                $status['text'] = $this->ionAuth->errors(
-                    $this->validationListTemplate
-                );
-                $status['title'] = 'Error';
-                echo json_encode($status);
-                return false;
-            }
-        }
+        $penjabat = new DosenM();
         $data = [
-            'full_name' => $this->request->getPost('nama_user'),
-            'username' => $this->request->getPost('username'),
-            'email' => $this->request->getPost('email'),
-            'phone' => $this->request->getPost('phone'),
+            'jk'                => $this->request->getVar('jk'),
+            'tempat_lahir'      => $this->request->getVar('tempat_lahir'),
+            'tgl_lahir'         => $this->request->getVar('tgl_lahir'),
+            'gelar_depan'       => $this->request->getVar('gelar_depan'),
+            'gelar_belakang'    => $this->request->getVar('gelar_belakang'),
+            'alamat'            => $this->request->getVar('alamat'),
+            'pendidikan'        => $this->request->getVar('pendidikan'),
+            'lulusan'           => $this->request->getVar('lulusan'),
         ];
-        if ($this->ionAuth->update($this->request->getPost('user_id'), $data)) {
+        if ($penjabat->update(session('id_peg'), $data)) {
             $status['type'] = 'success';
-            $status['text'] = $this->ionAuth->messages();
-            $status['title'] = 'Success';
-        } else {
+            $status['text'] = "Berhasil diganti";
+            $status['title'] = 'Berhasil';
+        }else{
             $status['type'] = 'error';
-            $status['text'] = $this->ionAuth->errors(
-                $this->validationListTemplate
-            );
-            $status['title'] = 'Error';
+            $status['text'] = "Gagal diganti";
+            $status['title'] = 'Gagal';
         }
-        echo json_encode($status);
+        return json_encode($status);
     }
     public function change_pic()
     {
