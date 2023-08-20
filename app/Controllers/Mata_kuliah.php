@@ -58,7 +58,7 @@ class Mata_kuliah extends BaseController
         foreach ($id as $ids) {
             $get = $this->mata_kuliahm->find($ids);
             $data = array(
-                'nama' => '<b>' . $get->nama . '</b>',
+                'nama' => '<b>' . $get->nama_mk . '</b>',
                 'get' => $get,
             );
             $this->data['form_input'][] = view('App\Views\mata_kuliah\form_input', $data);
@@ -72,7 +72,7 @@ class Mata_kuliah extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('nama');
+                $nama = $this->request->getPost('id');
                 $data = array();
                 foreach ($nama as $key => $val) {
                     array_push($data, array(
