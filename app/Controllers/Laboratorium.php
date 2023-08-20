@@ -57,7 +57,7 @@ class Laboratorium extends BaseController
         foreach ($id as $ids) {
             $get = $this->laboratoriumm->find($ids);
             $data = array(
-                'nama' => '<b>' . $get->nama . '</b>',
+                'nama' => '<b>' . $get->nama_lab . '</b>',
                 'get' => $get,
             );
             $this->data['form_input'][] = view('App\Views\laboratorium\form_input', $data);
@@ -71,7 +71,7 @@ class Laboratorium extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('nama');
+                $nama = $this->request->getPost('id');
                 $data = array();
                 foreach ($nama as $key => $val) {
                     array_push($data, array(
