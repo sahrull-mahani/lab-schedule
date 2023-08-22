@@ -42,19 +42,7 @@ class Filters extends BaseConfig
     public $globals = [
         'before' => [
             'honeypot',
-            'csrf' => [
-                'except' => [
-                    'pangkalan/*',
-                    'kuota/*',
-                    'jabatan/*',
-                    'harga/*',
-                    'laporan/*',
-                    'pegawai/*',
-                    'verifikator/*',
-                    'grafik/inflasi_barang',
-                    'auth/*',
-                ]
-            ],
+            // 'csrf',
             'invalidchars',
             'authfilter' => ['except' => ['full/*', 'thumb/*', 'pdf/*', 'detail/*']],
             'cors',

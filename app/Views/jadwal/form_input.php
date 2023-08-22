@@ -12,6 +12,19 @@
         ?>
     </div>
 </div>
+<?php if ($aksi == 'edit') : ?>
+    <div class="form-group mode2">
+        <label for="dosen_id" class="col-form-label">Dosen Pengganti</label>
+        <div class="item">
+            <?php $defaults = array('' => '==Pilih Dosen Pengganti==');
+            foreach ($dosen as $row) {
+                $dosens[$row->id] = $row->nama_penjabat;
+            }
+            echo form_dropdown('dosen_verify[]', $defaults + ($dosens ?? []), '', 'class="form-control border" id="dosen_verify"');
+            ?>
+        </div>
+    </div>
+<?php endif ?>
 <div class="form-group mode2">
     <label for="mk_id" class="col-form-label">Mata Kuliah</label>
     <div class="item">

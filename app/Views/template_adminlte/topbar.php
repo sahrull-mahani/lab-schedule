@@ -17,6 +17,41 @@
                     <input type="hidden" class="csrf-hash" value="<?= csrf_hash() ?>" />
                 </div>
             </div>
+
+            <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-bell cursor-pointer" aria-hidden="true"></i>
+                    <?php if (getNotifTukarJadwal(session('id_peg'))) : ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notifikasi">
+                            <?= count(getNotifTukarJadwal(session('id_peg'))) ?>
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    <?php endif ?>
+                </a>
+                <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                    <?php foreach (getNotifTukarJadwal(session('id_peg')) as $item) : ?>
+                        <li class="mb-2 item-notifikasi" data-id="<?= $item->id ?>">
+                            <a class="dropdown-item border-radius-md" href="javascript:;">
+                                <div class="d-flex py-1">
+                                    <div class="my-auto">
+                                        <!-- <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 "> -->
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="text-sm font-weight-normal mb-1">
+                                            <span class="font-weight-bold">Pindah jadwal</span> from <?= $item->nama_penjabat ?>
+                                        </h6>
+                                        <p class="text-xs text-secondary mb-0">
+                                            <i class="fa fa-calendar me-1" aria-hidden="true"></i>
+                                            <?= date('Y-m-d', strtotime($item->updated_at)) ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    <?php endforeach ?>
+                </ul>
+            </li>
+
             <ul class="navbar-nav  justify-content-end">
                 <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">

@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class JadwalM extends Model
 {
     protected $table = 'jadwal';
-    protected $allowedFields = array('dosen_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari', 'status');
+    protected $allowedFields = array('dosen_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari', 'status', 'dosen_verify');
     protected $returnType     = 'object';
     protected $useSoftDeletes = false;
 
@@ -63,6 +63,7 @@ class JadwalM extends Model
         $this->join('mata_kuliah mk', 'mk.id=jadwal.mk_id');
         $this->join('kelas k', 'k.id=jadwal.kelas_id');
         $this->join('laboratorium l', 'l.id=jadwal.lab_id');
+        $this->orderBy('hari,waktu_mulai', 'asc');
     }
     public function get_datatables()
     {

@@ -17,6 +17,56 @@ function scrolltitle() {
 }
 scrolltitle()
 
+$('.item-notifikasi').on('click', function () {
+    let notifikasi = $('#notifikasi')
+    Swal.fire({
+        title: 'Pindah Jadwal',
+        text: 'Anda yakin ingin pindah jadwal?',
+        icon: 'question',
+        showCancelButton: true,
+        showDenyButton: true,
+        denyButtonText: 'Tolak',
+        confirmButtonText: 'Pindah',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post({
+                url: location.origin + '/jadwal/save',
+                data: {
+                    id: $(this).data('id'),
+                    action: 'pindah',
+                },
+                dataType: 'json',
+                context: this,
+                success: function() {
+                    if (parseInt(notifikasi.text()) == 1) {
+                        notifikasi.remove()
+                    }else{
+                        notifikasi.text(parseInt(notifikasi.text()) - 1)
+                    }
+                }
+            })
+        }
+        if (result.isDenied) {
+            $.post({
+                url: location.origin + '/jadwal/save',
+                data: {
+                    id: $(this).data('id'),
+                    action: 'tolak',
+                },
+                dataType: 'json',
+                context: this,
+                success: function() {
+                    if (parseInt(notifikasi.text()) == 1) {
+                        notifikasi.remove()
+                    }else{
+                        notifikasi.text(parseInt(notifikasi.text()) - 1)
+                    }
+                }
+            })
+        }
+    })
+})
+
 $('.btn-ask').on('click', function (e) {
     e.preventDefault()
     Swal.fire({
@@ -413,7 +463,6 @@ function readFile(url) {
         $("#spinner").hide();
     });
     $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-        console.log($table.bootstrapTable('getSelections'))
         $remove.prop('disabled', !$table.bootstrapTable('getSelections').length)
         $approve.prop('disabled', !$table.bootstrapTable('getSelections').length)
         $edit.prop('disabled', !$table.bootstrapTable('getSelections').length)
@@ -461,7 +510,7 @@ function readFile(url) {
                         position: 'top right',
                         msg: data.pesan
                     })
-                }else{
+                } else {
                     $('#modal_content').modal('show')
                     $('.isi-modal').html(data.html)
                     $('.modal-title').html(data.modal_title)
@@ -505,9 +554,9 @@ function readFile(url) {
             return row.kelas_id
         })
         Swal.fire({
-            title: 'Hapus Data?',
-            text: 'Anda Yakin Akan Menghapus Data ' + kelas + '?',
-            icon: 'warning',
+            title: 'Rubah Status',
+            html: 'Apakah Anda ingin mengganti status jadwal lab untuk <b>' + kelas + '</b>?',
+            icon: 'question',
             showCancelButton: true,
             showDenyButton: true,
             confirmButtonColor: '#4CAF50',

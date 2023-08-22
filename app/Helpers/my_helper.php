@@ -327,3 +327,8 @@ function getUserByEmail($identity)
 {
     return db_connect()->table('users u')->join('users_groups ug', 'ug.user_id = u.id')->join('groups g', 'g.id = ug.group_id')->Where('u.email', $identity)->orWhere('u.username', $identity)->get()->getRow();
 }
+
+function getNotifTukarJadwal($id)
+{
+    return db_connect()->table('jadwal j')->select('j.*, p.nama_penjabat')->join('penjabat p', 'p.id=j.dosen_verify')->where('dosen_verify', $id)->get()->getResult();
+}
