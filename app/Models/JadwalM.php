@@ -63,6 +63,12 @@ class JadwalM extends Model
         $this->join('mata_kuliah mk', 'mk.id=jadwal.mk_id');
         $this->join('kelas k', 'k.id=jadwal.kelas_id');
         $this->join('laboratorium l', 'l.id=jadwal.lab_id');
+        if (in_groups(3)) {
+            $this->where('dosen_id', session('id_peg'));
+            $this->orWhere('dosen_verify', session('id_peg'));
+            $this->orWhere('status', 'pindah jadwal');
+            $this->orWhere('status', 'setuju');
+        }
         $this->orderBy('hari,waktu_mulai', 'asc');
     }
     public function get_datatables()

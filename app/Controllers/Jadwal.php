@@ -134,7 +134,7 @@ class Jadwal extends BaseController
                         return json_encode($status);
                     }
                     array_push($data, array(
-                        'dosen_id' => $this->request->getPost('dosen_id')[$key],
+                        'dosen_id' => is_admin() ? $this->request->getPost('dosen_id')[$key] : session('id_peg'),
                         'mk_id' => $this->request->getPost('mk_id')[$key],
                         'kelas_id' => $this->request->getPost('kelas_id')[$key],
                         'lab_id' => $labID,
@@ -156,20 +156,30 @@ class Jadwal extends BaseController
                 $id = $this->request->getPost('id');
                 $data = array();
                 foreach ($id as $key => $val) {
-                    $dosenID = $this->request->getPost('dosen_id')[$key];
-                    $dosenPengganti = $this->request->getPost('dosen_verify')[$key];
+                    $get = $this->jadwalm->find($val);
+                    $dosenPengganti = $this->request->getPost('dosen_verify')[$key] ?? '';
+                    if (is_admin()) {
+                        $dosenID = $this->request->getPost('dosen_id')[$key];
+                        $dosen_id = $dosenPengganti != '' ? $dosenPengganti : $dosenID;
+                        $dosen_verify = $dosenPengganti != '' ? $dosenID : null;
+                    } else {
+                        $dosen_id = $dosenPengganti != '' ? session('id_peg') : $get->dosen_id;
+                        $dosen_verify = $dosenPengganti != '' ? $get->dosen_id : null;
+                    }
+
                     array_push($data, array(
                         'id' => $val,
-                        'dosen_id' => $dosenPengganti != '' ? $dosenPengganti : $dosenID,
-                        'mk_id' => $this->request->getPost('mk_id')[$key],
-                        'kelas_id' => $this->request->getPost('kelas_id')[$key],
-                        'lab_id' => $this->request->getPost('lab_id')[$key],
-                        'waktu_mulai' => $this->request->getPost('waktu_mulai')[$key],
-                        'waktu_selesai' => $this->request->getPost('waktu_selesai')[$key],
-                        'hari' => $this->request->getPost('hari')[$key],
+                        'dosen_id' => $dosen_id,
+                        'mk_id' => $this->request->getPost('mk_id')[$key] ?? $get->mk_id,
+                        'kelas_id' => $this->request->getPost('kelas_id')[$key] ?? $get->kelas_id,
+                        'lab_id' => $this->request->getPost('lab_id')[$key] ?? $get->lab_id,
+                        'waktu_mulai' => $this->request->getPost('waktu_mulai')[$key] ?? $get->waktu_mulai,
+                        'waktu_selesai' => $this->request->getPost('waktu_selesai')[$key] ?? $get->waktu_selesai,
+                        'hari' => $this->request->getPost('hari')[$key] ?? $get->hari,
                         'status' => $dosenPengganti != '' ? 'pindah jadwal' : 'belum disetujui',
-                        'dosen_verify' => $dosenPengganti != '' ? $dosenID : null,
+                        'dosen_verify' => $dosen_verify,
                     ));
+                    
                 }
                 if ($this->jadwalm->updateBatch($data, 'id')) {
                     $status['type'] = 'success';
@@ -236,7 +246,15 @@ class Jadwal extends BaseController
                 echo json_encode($status);
                 break;
             case 'delete':
-                if ($this->jadwalm->delete($this->request->getPost('id'))) {
+                $id = $this->request->getPost('id');
+                if (in_groups(3)) {
+                    foreach ($this->jadwalm->whereIn('id', $id)->findAll() as $row) {
+                        $status['type'] = 'warning';
+                        $status['text'] = ['<strong>Oh snap!</strong> Proses hapus data gagal, Karena data ada yang sudah disetujui!.'];
+                        if ($row->status == 'setuju') return json_encode($status);
+                    }
+                }
+                if ($this->jadwalm->delete($id)) {
                     $status['type'] = 'success';
                     $status['text'] = '<strong>Deleted..!</strong>Berhasil dihapus';
                 } else {
