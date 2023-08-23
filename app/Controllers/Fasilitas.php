@@ -3,13 +3,15 @@
 namespace App\Controllers;
 
 use App\Models\FasilitasM;
+use App\Models\LaboratoriumM;
 
 class Fasilitas extends BaseController
 {
-    protected $fasilitasm, $data, $session;
+    protected $fasilitasm, $data, $session, $labm;
     function __construct()
     {
         $this->fasilitasm = new FasilitasM();
+        $this->labm = new LaboratoriumM();
     }
     public function index()
     {
@@ -47,6 +49,7 @@ class Fasilitas extends BaseController
         $num_of_row = $this->request->getPost('num_of_row');
         for ($x = 1; $x <= $num_of_row; $x++) {
             $data['nama'] = 'Data ' . $x;
+            $data['laboratorium'] = $this->labm->findAll();
             $this->data['form_input'][] = view('App\Views\fasilitas\form_input', $data);
         }
         $status['html']         = view('App\Views\fasilitas\form_modal', $this->data);
@@ -61,8 +64,9 @@ class Fasilitas extends BaseController
         foreach ($id as $ids) {
             $get = $this->fasilitasm->find($ids);
             $data = array(
-                'nama' => '<b>' . $get->nama . '</b>',
+                'nama' => '<b>' . $get->nama_fasilitas . '</b>',
                 'get' => $get,
+                'laboratorium' => $this->labm->findAll(),
             );
             $this->data['form_input'][] = view('App\Views\fasilitas\form_input', $data);
         }
@@ -75,7 +79,7 @@ class Fasilitas extends BaseController
     {
         switch ($this->request->getPost('action')) {
             case 'insert':
-                $nama = $this->request->getPost('nama');
+                $nama = $this->request->getPost('id');
                 $data = array();
                 foreach ($nama as $key => $val) {
                     array_push($data, array(

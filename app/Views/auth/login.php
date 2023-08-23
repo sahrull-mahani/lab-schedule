@@ -24,7 +24,7 @@
       <img src="<?= site_url('assets/dist/img/logo-bolmut2.png') ?>" alt="">
     </div>
     <div class="text-center mt-4 name">
-      Ekbang
+      Lab Schedule
     </div>
     <?= isset($message) ? '<p class="login-box-msg error">' . $message . '</p>' : ''; ?>
     <?= form_open('log-in', array('id' => 'form-login', 'class' => 'p-3 mt-3')) ?>

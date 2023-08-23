@@ -2,9 +2,14 @@
     <h5><i class="icon fas fa-info"></i> <?= $nama ?></h5>
 </div>
 <div class="form-group mode2">
-    <label for="lab_id" class="col-form-label">Lab Id</label>
+    <label for="lab_id" class="col-form-label">Laboratorium</label>
     <div class="item">
-        <input type="text" class="form-control border" id="lab_id" name="lab_id[]" value="<?= (isset($get->lab_id)) ? $get->lab_id : ''; ?>" placeholder="Nama Laboratorium" required />
+        <?php $defaults = array('' => '==Pilih Laboratorium==');
+        foreach ($laboratorium as $row) {
+            $labs[$row->id] = $row->nama_lab;
+        }
+        echo form_dropdown('lab_id[]', $defaults + ($labs ?? []), (isset($get->lab_id)) ? $get->lab_id : '', 'class="form-control border" id="lab_id" required');
+        ?>
     </div>
 </div>
 <div class="form-group mode2">
@@ -22,19 +27,19 @@
 <div class="form-group mode2">
     <label for="status" class="col-form-label">Status</label>
     <div class="item">
-        <?php $defaults = array(''=>'==Pilih Status==');
-            $options = array(
-				'layak'=>'Layak',
-				'tidak layak'=>'Tidak Layak',
-			);  
-            echo form_dropdown('status[]',$defaults + $options,(isset($get->status)) ? $get->status: '','class="form-control border" id="status" required');
+        <?php $defaults = array('' => '==Pilih Status==');
+        $options = array(
+            'layak' => 'Layak',
+            'tidak layak' => 'Tidak Layak',
+        );
+        echo form_dropdown('status[]', $defaults + $options, (isset($get->status)) ? $get->status : '', 'class="form-control border" id="status" required');
         ?>
     </div>
 </div>
 <div class="form-group mode2">
     <label for="keterangan" class="col-form-label">Keterangan</label>
     <div class="item">
-        <input type="text" class="form-control border" id="keterangan" name="keterangan[]" value="<?= (isset($get->keterangan)) ? $get->keterangan : ''; ?>" placeholder="Keterangan"  />
+        <input type="text" class="form-control border" id="keterangan" name="keterangan[]" value="<?= (isset($get->keterangan)) ? $get->keterangan : ''; ?>" placeholder="Keterangan" />
     </div>
 </div>
 <input type="hidden" name="id[]" value="<?= (isset($get->id)) ? $get->id : ''; ?>" />
