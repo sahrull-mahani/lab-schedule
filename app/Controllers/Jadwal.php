@@ -46,24 +46,24 @@ class Jadwal extends BaseController
                 case 'pindah jadwal':
                     $color = 'info';
                     break;
+                case 'dosen setuju':
+                    $color = 'info';
+                    break;
             }
-            if ($rows->dosen_verify !== null && $rows->status == 'pindah jadwal') {
-                $dosenVerify  = pegawaiByID($rows->dosen_verify)->nama_penjabat . '<br/>';
-            }
-            if ($rows->dosen_verify == null && $rows->status == 'pindah jadwal') {
-                $pesan = '<br/> Diverifikasi';
+            if ($rows->status == 'pindah jadwal' || $rows->status == 'dosen setuju') {
+                $dosenVerify  = $rows->nama_penjabat . '<br/>';
             }
             $row = array();
             $row['id'] = $rows->id;
             $row['nomor'] = $no++;
-            $row['dosen_id'] = $rows->nama_penjabat;
+            $row['dosen_id'] = ($rows->status == 'pindah jadwal' || $rows->status == 'dosen setuju') ? pegawaiByID($rows->dosen_verify)->nama_penjabat : $rows->nama_penjabat;
             $row['mk_id'] = $rows->nama_mk;
             $row['kelas_id'] = $rows->nama_kelas;
             $row['lab_id'] = $rows->nama_lab;
             $row['waktu_mulai'] = $rows->waktu_mulai;
             $row['waktu_selesai'] = $rows->waktu_selesai;
             $row['hari'] = $rows->hari;
-            $row['status'] = @$dosenVerify . "<span class='fw-bold rounded px-1 bg-$color text-white'>$rows->status</span>" . @$pesan;
+            $row['status'] = @$dosenVerify . "<span class='fw-bold rounded px-1 bg-$color text-white'>$rows->status</span>";
             $data[] = $row;
         }
         $output = array(
@@ -179,7 +179,6 @@ class Jadwal extends BaseController
                         'status' => $dosenPengganti != '' ? 'pindah jadwal' : 'belum disetujui',
                         'dosen_verify' => $dosen_verify,
                     ));
-                    
                 }
                 if ($this->jadwalm->updateBatch($data, 'id')) {
                     $status['type'] = 'success';
@@ -203,9 +202,15 @@ class Jadwal extends BaseController
                         $status['text'] = ['Laboratorium' => 'Telah Terjadwal', 'Waktu Mulai' => 'Telah Terjadwal', 'Hari' => 'Telah Terjadwal'];
                         return json_encode($status);
                     }
+                    if ($jadwal->status == 'pindah jadwal') {
+                        $status['type'] = 'warning';
+                        $status['text'] = ['Dosen yang bersangkutan belum menyetujui!',' Anda belum bisa mengganti status!'];
+                        return json_encode($status);
+                    }
                     array_push($data, array(
                         'id' => $val,
                         'status' => $this->request->getPost('status')[$key],
+                        'dosen_verify' => null,
                     ));
                 }
                 if ($this->jadwalm->updateBatch($data, 'id')) {
@@ -219,7 +224,7 @@ class Jadwal extends BaseController
                 break;
             case 'pindah':
                 $id = $this->request->getPost('id');
-                if ($this->jadwalm->update($id, ['dosen_verify' => null])) {
+                if ($this->jadwalm->update($id, ['status' => 'dosen setuju'])) {
                     $status['type'] = 'success';
                     $status['text'] = 'Data Jadwal Berhasil Disetujui';
                 } else {

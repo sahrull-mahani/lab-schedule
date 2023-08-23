@@ -130,7 +130,7 @@
   background-repeat: no-repeat;
 }
 
-.btn-group > .select.classic {
+.btn-group>.select.classic {
   background-position:
     calc(100% - 15px) calc(1em + 6px),
     calc(100% - 10px) calc(1em + 6px),

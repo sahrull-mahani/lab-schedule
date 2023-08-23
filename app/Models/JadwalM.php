@@ -69,6 +69,12 @@ class JadwalM extends Model
             $this->orWhere('status', 'pindah jadwal');
             $this->orWhere('status', 'setuju');
         }
+        if (in_groups(4)) {
+            $this->where('status', 'setuju');
+            $this->orWhere('status', 'pindah jadwal');
+            $this->orWhere('status', 'dosen setuju');
+            $this->where('jadwal.kelas_id', pegawaiByID(session('id_peg'))->kelas_id);
+        }
         $this->orderBy('hari,waktu_mulai', 'asc');
     }
     public function get_datatables()

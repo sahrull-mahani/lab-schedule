@@ -10,23 +10,27 @@
             </div>
         </div>
         <div class="card-body">
-            <div id="toolbar">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <input type="number" class="btn btn-default border" style="width: 100px;" value="1" min="1" id="number-of-row">
-                    <button type="button" class="btn btn-primary create" method="create" data-toggle="modal"><i class="fa fa-plus"></i> Buat Jadwal</button>
-                    <button type="button" class="btn btn-warning" id="edit" method="edit" disabled><i class="fa fa-edit"></i> Pindah Jadwal</button>
-                    <button type="button" class="btn btn-danger" id="remove" disabled><i class="fa fa-trash"></i> Hapus</button>
-                    <?php if (is_admin()) : ?>
-                        <button type="button" class="btn btn-success" id="approve" disabled><i class="fa fa-check"></i> Status</button>
-                    <?php endif ?>
+            <?php if (in_groups([1, 2, 3])) : ?>
+                <div id="toolbar">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <input type="number" class="btn btn-default border" style="width: 100px;" value="1" min="1" id="number-of-row">
+                        <button type="button" class="btn btn-primary create" method="create" data-toggle="modal"><i class="fa fa-plus"></i> Buat Jadwal</button>
+                        <button type="button" class="btn btn-warning" id="edit" method="edit" disabled><i class="fa fa-edit"></i> Pindah Jadwal</button>
+                        <button type="button" class="btn btn-danger" id="remove" disabled><i class="fa fa-trash"></i> Hapus</button>
+                        <?php if (is_admin()) : ?>
+                            <button type="button" class="btn btn-success" id="approve" disabled><i class="fa fa-check"></i> Status</button>
+                        <?php endif ?>
+                    </div>
                 </div>
-            </div>
+            <?php endif ?>
             <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0" id="table" data-toggle="table" data-ajax="ajaxRequest" data-side-pagination="server" data-pagination="true" data-search="true" data-show-columns="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-click-to-select="true" data-toolbar="#toolbar">
                     <thead>
                         <tr>
-                            <th data-field="state" data-checkbox="true"></th>
-                            <th data-field="id" data-visible="false">ID</th>
+                            <?php if (in_groups([1, 2, 3])) : ?>
+                                <th data-field="state" data-checkbox="true"></th>
+                                <th data-field="id" data-visible="false">ID</th>
+                            <?php endif ?>
                             <th data-field="nomor">No</th>
                             <th data-field="dosen_id">Dosen</th>
                             <th data-field="mk_id">Mata Kuliah</th>
@@ -34,7 +38,9 @@
                             <th data-field="lab_id">Laboratorium</th>
                             <th data-field="waktu_mulai">Waktu Mulai</th>
                             <th data-field="waktu_selesai">Waktu Selesai</th>
-                            <th data-field="status">Status</th>
+                            <?php if (in_groups([1, 2, 3])) : ?>
+                                <th data-field="status">Status</th>
+                            <?php endif ?>
                             <th data-field="hari">Hari</th>
                         </tr>
                     </thead>

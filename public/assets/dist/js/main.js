@@ -43,6 +43,7 @@ $('.item-notifikasi').on('click', function () {
                     }else{
                         notifikasi.text(parseInt(notifikasi.text()) - 1)
                     }
+                    $('#table').bootstrapTable('refresh')
                 }
             })
         }
@@ -61,6 +62,7 @@ $('.item-notifikasi').on('click', function () {
                     }else{
                         notifikasi.text(parseInt(notifikasi.text()) - 1)
                     }
+                    $('#table').bootstrapTable('refresh')
                 }
             })
         }

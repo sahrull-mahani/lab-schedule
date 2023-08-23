@@ -330,5 +330,5 @@ function getUserByEmail($identity)
 
 function getNotifTukarJadwal($id)
 {
-    return db_connect()->table('jadwal j')->select('j.*, p.nama_penjabat')->join('penjabat p', 'p.id=j.dosen_verify')->where('dosen_verify', $id)->get()->getResult();
+    return db_connect()->table('jadwal j')->select('j.*, p.nama_penjabat as dosen, pe.nama_penjabat as dosen_pengganti')->join('penjabat p', 'p.id=j.dosen_verify')->join('penjabat pe', 'pe.id=j.dosen_id')->where('dosen_verify', $id)->where('status', 'pindah jadwal')->get()->getResult();
 }

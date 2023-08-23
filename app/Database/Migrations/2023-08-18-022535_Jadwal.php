@@ -17,7 +17,7 @@ class Jadwal extends Migration
             'waktu_mulai' => ['type' => 'time'],
             'waktu_selesai' => ['type' => 'time'],
             'hari' => ['type' => 'enum', 'constraint' => ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu']],
-            'status' => ['type' => 'enum', 'constraint' => ['setuju', 'tidak setuju', 'belum disetujui', 'pindah jadwal'], 'default' => 'belum disetujui'],
+            'status' => ['type' => 'enum', 'constraint' => ['setuju', 'tidak setuju', 'belum disetujui', 'pindah jadwal', 'dosen setuju'], 'default' => 'belum disetujui'],
             'dosen_verify' => ['type' => 'int', 'constraint' => 10, 'unsigned' => true, 'null' => true],
             'created_at' => ['type' => 'date'],
             'updated_at' => ['type' => 'date'],

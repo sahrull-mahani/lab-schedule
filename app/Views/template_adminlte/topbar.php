@@ -38,7 +38,7 @@
                                     </div>
                                     <div class="d-flex flex-column justify-content-center">
                                         <h6 class="text-sm font-weight-normal mb-1">
-                                            <span class="font-weight-bold">Pindah jadwal</span> from <?= $item->nama_penjabat ?>
+                                            <span class="font-weight-bold">Pindah jadwal</span> from <?= $item->dosen_pengganti ?>
                                         </h6>
                                         <p class="text-xs text-secondary mb-0">
                                             <i class="fa fa-calendar me-1" aria-hidden="true"></i>
