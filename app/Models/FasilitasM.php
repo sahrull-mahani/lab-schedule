@@ -56,6 +56,8 @@ class FasilitasM extends Model
 
         $this->select('fasilitas.*, l.nama_lab');
         $this->join('laboratorium l', 'l.id=fasilitas.lab_id');
+        $this->orderBy('lab_id', 'asc');
+        $this->orderBy('fasilitas.id', 'desc');
     }
     public function get_datatables()
     {

@@ -226,11 +226,10 @@ function pegawai()
 }
 function ddNotInUser()
 {
-    $db = \Config\Database::connect();
-    $query = $db->query("SELECT * FROM penjabat WHERE id NOT IN (SELECT id_peg FROM users WHERE id_peg IS NOT NULL) AND deleted_at IS NULL");;
-    if ($query->getNumRows() !== 0) {
+    $query = db_connect()->table('penjabat p')->select('p.*')->join('users u', 'u.id_peg = p.id', 'left')->where('jabatan !=', 'k-lab')->where('id_peg', null)->orderBy('jabatan', 'asc')->get();
+    if ($query->getNumRows() > 0) {
         foreach ($query->getResult() as $row) {
-            $isi[$row->id] = $row->nama_penjabat;
+            $isi[$row->id] = "$row->nama_penjabat &nbsp;[$row->jabatan]";
         }
     } else {
         $isi[''] = "Tidak Ada Data";

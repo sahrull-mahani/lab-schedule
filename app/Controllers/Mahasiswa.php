@@ -131,17 +131,18 @@ class Mahasiswa extends BaseController
                             break;
                         }
                     }
+                    $nama = $this->request->getPost('nama_penjabat')[$key];
                     array_push($data, array(
                         'id' => $val,
                         'kelas_id' => $this->request->getPost('kelas_id')[$key],
                         'nomor_induk' => $this->request->getPost('nomor_induk')[$key],
-                        'nama_penjabat' => $this->request->getPost('nama_penjabat')[$key],
+                        'nama_penjabat' => $nama,
                         'jk' => $this->request->getPost('jk')[$key],
                         'tempat_lahir' => $this->request->getPost('tempat_lahir')[$key],
                         'tgl_lahir' => get_format_date_sql($this->request->getPost('tgl_lahir')[$key]),
                         'alamat' => $this->request->getPost('alamat')[$key],
                     ));
-                    db_connect()->table('users')->where('id_peg', $val)->set('username', $nim)->update();
+                    db_connect()->table('users')->where('id_peg', $val)->set(['username' => $nim, 'nama_user' => $nama])->update();
                 }
                 if (session()->getFlashdata('errorNIM')) {
                     $status['type'] = 'error';

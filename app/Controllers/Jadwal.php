@@ -97,9 +97,9 @@ class Jadwal extends BaseController
         $this->data = array('action' => 'update', 'btn' => '<i class="fas fa-edit"></i> Edit');
         foreach ($id as $ids) {
             $get = $this->jadwalm->select('jadwal.*, k.nama_kelas')->join('kelas k', 'k.id=jadwal.kelas_id')->find($ids);
-            // if ($get->status == 'setuju') {
-            //     return json_encode(['html' => 400, 'pesan' => 'data telah di setujui']);
-            // }
+            if ($get->status == 'pindah jadwal') {
+                return json_encode(['html' => 400, 'pesan' => 'Anda tidak bisa merubah data ini!, Data ini sedang dalam proses perpindahan jadwal!']);
+            }
             $data = array(
                 'aksi' => 'edit',
                 'nama' => '<b>' . $get->nama_kelas . '</b>',
@@ -253,10 +253,10 @@ class Jadwal extends BaseController
             case 'delete':
                 $id = $this->request->getPost('id');
                 if (in_groups(3)) {
+                    $status['type'] = 'warning';
+                    $status['text'] = ['<strong>Oh snap!</strong> Proses hapus data gagal, Karena data ada yang sudah disetujui!.'];
                     foreach ($this->jadwalm->whereIn('id', $id)->findAll() as $row) {
-                        $status['type'] = 'warning';
-                        $status['text'] = ['<strong>Oh snap!</strong> Proses hapus data gagal, Karena data ada yang sudah disetujui!.'];
-                        if ($row->status == 'setuju') return json_encode($status);
+                        if ($row->status == 'setuju' || $row->status == 'pindah jadwal') return json_encode($status);
                     }
                 }
                 if ($this->jadwalm->delete($id)) {

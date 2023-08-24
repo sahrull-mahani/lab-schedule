@@ -126,15 +126,16 @@ class Dosen extends BaseController
                     $nidn = $this->request->getPost('nomor_induk')[$key];
                     if ($this->dosenm->where('jabatan', 'dosen')->where('nomor_induk', $nidn)->first()) {
                         $nomorDosen = $this->dosenm->where('id', $val)->first()->nomor_induk;
-                        if($nidn !== $nomorDosen) {
+                        if ($nidn !== $nomorDosen) {
                             session()->setFlashdata('errorNIDN', 'NIDN sudah terdaftar');
                             break;
                         }
                     }
+                    $nama = $this->request->getPost('nama_penjabat')[$key];
                     array_push($data, array(
                         'id' => $val,
                         'nomor_induk' => $nidn,
-                        'nama_penjabat' => $this->request->getPost('nama_penjabat')[$key],
+                        'nama_penjabat' => $nama,
                         'jk' => $this->request->getPost('jk')[$key],
                         'tempat_lahir' => $this->request->getPost('tempat_lahir')[$key],
                         'tgl_lahir' => get_format_date_sql($this->request->getPost('tgl_lahir')[$key]),
@@ -144,7 +145,7 @@ class Dosen extends BaseController
                         'pendidikan' => $this->request->getPost('pendidikan')[$key],
                         'lulusan' => $this->request->getPost('lulusan')[$key],
                     ));
-                    db_connect()->table('users')->where('id_peg', $val)->set('username', $nidn)->update();
+                    db_connect()->table('users')->where('id_peg', $val)->set(['username' => $nidn, 'nama_user' => $nama])->update();
                 }
                 if (session()->getFlashdata('errorNIDN')) {
                     $status['type'] = 'error';

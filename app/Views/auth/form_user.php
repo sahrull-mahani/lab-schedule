@@ -2,7 +2,7 @@
 <div class="modal-body">
     <?= form_label(lang('Auth.create_user_name_label'), 'id_peg', array("class" => "col-sm-3 col-form-label")); ?>
     <div class="input-group input-group-outline mb-3">
-        <?php $defaults = array('none' => 'Pilih Pegawai');
+        <?php $defaults = array('none' => 'Pilih Dosen/Mahasiswa');
         $dd = $action !== 'update' ? ddNotInUser() : pegawai();
         echo form_dropdown('id_peg', $defaults + $dd, isset($user->id_peg) ? $user->id_peg : '', 'class="form-control" id="id_peg" required'); ?>
     </div>
