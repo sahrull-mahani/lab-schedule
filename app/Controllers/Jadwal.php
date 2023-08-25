@@ -256,7 +256,9 @@ class Jadwal extends BaseController
                     $status['type'] = 'warning';
                     $status['text'] = ['<strong>Oh snap!</strong> Proses hapus data gagal, Karena data ada yang sudah disetujui!.'];
                     foreach ($this->jadwalm->whereIn('id', $id)->findAll() as $row) {
-                        if ($row->status == 'setuju' || $row->status == 'pindah jadwal') return json_encode($status);
+                        if ($row->dosen_id != session('id_peg')) {
+                            if ($row->status == 'setuju' || $row->status == 'pindah jadwal') return json_encode($status);
+                        }
                     }
                 }
                 if ($this->jadwalm->delete($id)) {

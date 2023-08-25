@@ -555,53 +555,60 @@ function readFile(url) {
         var kelas = $.map($table.bootstrapTable('getSelections'), function (row) {
             return row.kelas_id
         })
-        Swal.fire({
-            title: 'Rubah Status',
-            html: 'Apakah Anda ingin mengganti status jadwal lab untuk <b>' + kelas + '</b>?',
-            icon: 'question',
-            showCancelButton: true,
-            showDenyButton: true,
-            confirmButtonColor: '#4CAF50',
-            cancelButtonColor: '#7b809a',
-            denyButtonText: 'Tolak',
-            confirmButtonText: 'Setujui!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post({
-                    url: location.origin + '/jadwal/save',
-                    data: {
-                        action: 'approve',
-                        id: ids,
-                        status: ['setuju']
-                    },
-                    dataType: 'json',
-                    success: function (res) {
-                        Lobibox.notify(res.type, {
-                            position: 'top right',
-                            msg: res.text
-                        })
-                        $('#table').bootstrapTable('refresh')
-                    }
-                })
-            } else if (result.isDenied) {
-                $.post({
-                    url: location.origin + '/jadwal/save',
-                    data: {
-                        action: 'approve',
-                        id: ids,
-                        status: ['tidak setuju']
-                    },
-                    dataType: 'json',
-                    success: function (res) {
-                        Lobibox.notify(res.type, {
-                            position: 'top right',
-                            msg: res.text
-                        })
-                        $('#table').bootstrapTable('refresh')
-                    }
-                })
-            }
+        var status = $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.status
         })
+        if (status[0] == "<span class='fw-bold rounded px-1 bg-success text-white'>setuju</span>") {
+            Swal.fire('Gagal','data telah disetujui, hapus data jika ingin membatalkan!', 'error')
+        }else{
+            Swal.fire({
+                title: 'Rubah Status',
+                html: 'Apakah Anda ingin mengganti status jadwal lab untuk <b>' + kelas + '</b>?',
+                icon: 'question',
+                showCancelButton: true,
+                showDenyButton: true,
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#7b809a',
+                denyButtonText: 'Tolak',
+                confirmButtonText: 'Setujui!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post({
+                        url: location.origin + '/jadwal/save',
+                        data: {
+                            action: 'approve',
+                            id: ids,
+                            status: ['setuju']
+                        },
+                        dataType: 'json',
+                        success: function (res) {
+                            Lobibox.notify(res.type, {
+                                position: 'top right',
+                                msg: res.text
+                            })
+                            $('#table').bootstrapTable('refresh')
+                        }
+                    })
+                } else if (result.isDenied) {
+                    $.post({
+                        url: location.origin + '/jadwal/save',
+                        data: {
+                            action: 'approve',
+                            id: ids,
+                            status: ['tidak setuju']
+                        },
+                        dataType: 'json',
+                        success: function (res) {
+                            Lobibox.notify(res.type, {
+                                position: 'top right',
+                                msg: res.text
+                            })
+                            $('#table').bootstrapTable('refresh')
+                        }
+                    })
+                }
+            })
+        }
     })
     $remove.click(function () {
         var ids = $.map($table.bootstrapTable('getSelections'), function (row) {

@@ -19,5 +19,5 @@ php spark db:seed BasicSeeder
 
 ## tidak update versi ci (tetap di versi 4.3.6)
 ```javascript
-composer require codeigniter4/framework:4.1.5 -W
+composer require codeigniter4/framework:4.3.6 -W
 ```
