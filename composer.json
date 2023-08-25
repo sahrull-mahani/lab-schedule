@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.4 || ^8.0",
-        "codeigniter4/framework": "^4.0",
+        "codeigniter4/framework": "4.3.6",
         "mpdf/mpdf": "^8.1",
         "froala/wysiwyg-editor-php-sdk": "^4.0"
     },
