@@ -68,7 +68,7 @@
                     <div class="input-group input-group-outline mb-3">
                         <input type="text" name="email" value="<?= isset($user->email) ? $user->email : ''; ?>" id="email" class="form-control" required="required" <?= $identityColumn === 'email' ? 'readonly' : ''; ?> />
                     </div>
-                    <?= form_label(lang('Auth.edit_user_email_label'), 'email', ['class' => 'col-sm-4 col-form-label']); ?>
+                    <?= form_label(lang('Auth.edit_user_phone_label'), 'email', ['class' => 'col-sm-4 col-form-label']); ?>
                     <div class="input-group input-group-outline mb-3">
                         <input type="text" name="phone" value="<?= isset($user->phone) ? $user->phone : ''; ?>" id="phone" class="form-control" required="required" />
                     </div>
