@@ -581,11 +581,20 @@ function readFile(url) {
                             status: ['setuju']
                         },
                         dataType: 'json',
-                        success: function (res) {
-                            Lobibox.notify(res.type, {
-                                position: 'top right',
-                                msg: res.text
-                            })
+                        success: function (data) {
+                            if (data.type == 'success') {
+                                Lobibox.notify(data.type, {
+                                    position: 'top right',
+                                    msg: data.text
+                                })
+                            } else {
+                                $.each(data.text, function(i, val) {
+                                    Lobibox.notify(data.type, {
+                                        position: 'top right',
+                                        msg: ($.type(i) != 'number' ? `${i} : ` : '') + val
+                                    })
+                                })
+                            }
                             $('#table').bootstrapTable('refresh')
                         }
                     })

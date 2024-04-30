@@ -28,7 +28,7 @@
                     <thead>
                         <tr>
                             <?php if (in_groups([1, 2, 3])) : ?>
-                                <th data-field="state" data-checkbox="true"></th>
+                                <th data-field="state" data-radio="true"></th>
                                 <th data-field="id" data-visible="false">ID</th>
                             <?php endif ?>
                             <th data-field="nomor">No</th>

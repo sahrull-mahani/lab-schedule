@@ -45,7 +45,7 @@ class HomeM extends Model
         if (in_groups(4)) {
             $this->where('jadwal.kelas_id', pegawaiByID(session('id_peg'))->kelas_id);
         }
-        $this->orderBy('hari,waktu_mulai', 'asc');
+        $this->orderBy('hari,waktu_mulai,kelas_id,lab_id', 'asc');
     }
     public function get_datatables()
     {

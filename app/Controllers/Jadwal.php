@@ -128,7 +128,7 @@ class Jadwal extends BaseController
                     $waktumulai = explode(':', $waktu);
                     $waktumulai = current($waktumulai);
                     $hari = $this->request->getPost('hari')[$key];
-                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->first()) {
+                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->countAllResults() >= 2) {
                         $status['type'] = 'warning';
                         $status['text'] = ['Laboratorium' => 'Telah Terjadwal', 'Waktu Mulai' => 'Telah Terjadwal', 'Hari' => 'Telah Terjadwal'];
                         return json_encode($status);
@@ -197,7 +197,7 @@ class Jadwal extends BaseController
                     $labID = $jadwal->lab_id;
                     $waktumulai = $jadwal->waktu_mulai;
                     $hari = $jadwal->hari;
-                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->first()) {
+                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->countAllResults() >= 2) {
                         $status['type'] = 'warning';
                         $status['text'] = ['Laboratorium' => 'Telah Terjadwal', 'Waktu Mulai' => 'Telah Terjadwal', 'Hari' => 'Telah Terjadwal'];
                         return json_encode($status);
