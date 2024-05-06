@@ -9,7 +9,7 @@
             foreach ($dosen as $row) {
                 $dosens[$row->id] = $row->nama_penjabat;
             }
-            echo form_dropdown('dosen_id[]', $defaults + ($dosens ?? []), (isset($get->dosen_id)) ? $get->dosen_id : '', 'class="form-control border" id="dosen_id" required');
+            echo form_dropdown('dosen_id[' . ($key - 1) . '][]', $defaults + ($dosens ?? []), (isset($get->dosen_id)) ? $get->dosen_id : '', 'class="select2" multiple id="dosen_id" required');
             ?>
         </div>
     </div>
@@ -107,3 +107,12 @@
     </div>
 <?php endif ?>
 <input type="hidden" name="id[]" value="<?= (isset($get->id)) ? $get->id : ''; ?>" />
+
+<script>
+    $('.select2 option:first').attr('disabled', true)
+    $('.select2 option:first').attr('selected', false)
+    $('.select2').select2({
+        width: '100%',
+        maximumSelectionLength: 2
+    })
+</script>

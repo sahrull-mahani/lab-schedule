@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class JadwalM extends Model
 {
     protected $table = 'jadwal';
-    protected $allowedFields = array('dosen_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari', 'status', 'dosen_verify');
+    protected $allowedFields = array('dosen_id', 'dosentt_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari', 'status', 'dosen_verify');
     protected $returnType     = 'object';
     protected $useSoftDeletes = false;
 

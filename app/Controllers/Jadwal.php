@@ -57,6 +57,7 @@ class Jadwal extends BaseController
             $row['id'] = $rows->id;
             $row['nomor'] = $no++;
             $row['dosen_id'] = ($rows->status == 'pindah jadwal' || $rows->status == 'dosen setuju') ? pegawaiByID($rows->dosen_verify)->nama_penjabat : $rows->nama_penjabat;
+            $row['ttdosen'] = pegawaiByID($rows->dosentt_id)->nama_penjabat;
             $row['mk_id'] = $rows->nama_mk;
             $row['kelas_id'] = $rows->nama_kelas;
             $row['lab_id'] = $rows->nama_lab;
@@ -79,6 +80,7 @@ class Jadwal extends BaseController
         $num_of_row = $this->request->getPost('num_of_row');
         for ($x = 1; $x <= $num_of_row; $x++) {
             $data['nama'] = 'Data ' . $x;
+            $data['key'] = $x;
             $data['aksi'] = 'tambah';
             $data['dosen'] = $this->dosenm->where('jabatan', 'dosen')->findAll();
             $data['matakuliah'] = $this->mkm->findAll();
@@ -95,7 +97,7 @@ class Jadwal extends BaseController
     {
         $id = $this->request->getPost('id');
         $this->data = array('action' => 'update', 'btn' => '<i class="fas fa-edit"></i> Edit');
-        foreach ($id as $ids) {
+        foreach ($id as $key => $ids) {
             $get = $this->jadwalm->select('jadwal.*, k.nama_kelas')->join('kelas k', 'k.id=jadwal.kelas_id')->find($ids);
             if ($get->status == 'pindah jadwal') {
                 return json_encode(['html' => 400, 'pesan' => 'Anda tidak bisa merubah data ini!, Data ini sedang dalam proses perpindahan jadwal!']);
@@ -104,6 +106,7 @@ class Jadwal extends BaseController
                 'aksi' => 'edit',
                 'nama' => '<b>' . $get->nama_kelas . '</b>',
                 'get' => $get,
+                'key' => $key,
                 'dosen' => $this->dosenm->where('jabatan', 'dosen')->findAll(),
                 'matakuliah' => $this->mkm->findAll(),
                 'kelas' => $this->kelasm->findAll(),
@@ -128,13 +131,16 @@ class Jadwal extends BaseController
                     $waktumulai = explode(':', $waktu);
                     $waktumulai = current($waktumulai);
                     $hari = $this->request->getPost('hari')[$key];
-                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->countAllResults() >= 2) {
+                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->first()) {
                         $status['type'] = 'warning';
                         $status['text'] = ['Laboratorium' => 'Telah Terjadwal', 'Waktu Mulai' => 'Telah Terjadwal', 'Hari' => 'Telah Terjadwal'];
                         return json_encode($status);
                     }
+                    $mainDosen = current($this->request->getPost('dosen_id')[$key]);
+                    $ttDosen = end($this->request->getPost('dosen_id')[$key]);
                     array_push($data, array(
-                        'dosen_id' => is_admin() ? $this->request->getPost('dosen_id')[$key] : session('id_peg'),
+                        'dosen_id' => $mainDosen,
+                        'dosentt_id' => $ttDosen,
                         'mk_id' => $this->request->getPost('mk_id')[$key],
                         'kelas_id' => $this->request->getPost('kelas_id')[$key],
                         'lab_id' => $labID,
@@ -197,7 +203,7 @@ class Jadwal extends BaseController
                     $labID = $jadwal->lab_id;
                     $waktumulai = $jadwal->waktu_mulai;
                     $hari = $jadwal->hari;
-                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->countAllResults() >= 2) {
+                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->first()) {
                         $status['type'] = 'warning';
                         $status['text'] = ['Laboratorium' => 'Telah Terjadwal', 'Waktu Mulai' => 'Telah Terjadwal', 'Hari' => 'Telah Terjadwal'];
                         return json_encode($status);

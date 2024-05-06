@@ -42,6 +42,36 @@ class BasicSeeder extends Seeder
         ];
         $this->db->table('kelas')->insertBatch($kelas);
 
+        $mk = [
+            [
+                'kode_mk'   => 'PROG01',
+                'nama_mk'   => 'Pemrograman PHP',
+                'created_at'    => date('Y-m-d'),
+                'updated_at'    => date('Y-m-d'),
+            ],
+            [
+                'kode_mk'   => 'PROG02',
+                'nama_mk'   => 'Pemrograman Java',
+                'created_at'    => date('Y-m-d'),
+                'updated_at'    => date('Y-m-d'),
+            ],
+            [
+                'kode_mk'   => 'PROG03',
+                'nama_mk'   => 'Pemrograman Ruby',
+                'created_at'    => date('Y-m-d'),
+                'updated_at'    => date('Y-m-d'),
+            ],
+            [
+                'kode_mk'   => 'PROG04',
+                'nama_mk'   => 'Pemrograman Phython',
+                'created_at'    => date('Y-m-d'),
+                'updated_at'    => date('Y-m-d'),
+            ],
+        ];
+        $this->db->table('mata_kuliah')->insertBatch($mk);
+
+        $this->db->table('laboratorium')->insert(['nama_lab' => 'Lab A', 'created_at' => date('Y-m-d'), 'updated_at' => date('Y-m-d')]);
+
         $penjabat = [
             [
                 'jabatan'           => 'k-lab',
@@ -91,9 +121,73 @@ class BasicSeeder extends Seeder
                 'created_at'        => date('Y-m-d'),
                 'updated_at'        => date('Y-m-d'),
             ],
+            [
+                'jabatan'           => 'dosen',
+                'kelas_id'          => null,
+                'nomor_induk'       => '7550102',
+                'nama_penjabat'     => 'dosen dua',
+                'jk'                => 'Laki-laki',
+                'tempat_lahir'      => 'Gorontalo',
+                'tgl_lahir'         => '1988-08-17',
+                'gelar_depan'       => 'Drs',
+                'gelar_belakang'    => 'S.Kom, M.Kom',
+                'alamat'            => 'Kota Gorontalo, Jln. Setapak, 698871',
+                'pendidikan'        => 'S3',
+                'lulusan'           => 'Unsrat Manado',
+                'created_at'        => date('Y-m-d'),
+                'updated_at'        => date('Y-m-d'),
+            ],
+            [
+                'jabatan'           => 'dosen',
+                'kelas_id'          => null,
+                'nomor_induk'       => '7550103',
+                'nama_penjabat'     => 'dosen tiga',
+                'jk'                => 'Laki-laki',
+                'tempat_lahir'      => 'Gorontalo',
+                'tgl_lahir'         => '1988-08-17',
+                'gelar_depan'       => 'Drs',
+                'gelar_belakang'    => 'S.Kom, M.Kom',
+                'alamat'            => 'Kota Gorontalo, Jln. Setapak, 698871',
+                'pendidikan'        => 'S3',
+                'lulusan'           => 'Unsrat Manado',
+                'created_at'        => date('Y-m-d'),
+                'updated_at'        => date('Y-m-d'),
+            ],
+            [
+                'jabatan'           => 'dosen',
+                'kelas_id'          => null,
+                'nomor_induk'       => '7550104',
+                'nama_penjabat'     => 'dosen empat',
+                'jk'                => 'Laki-laki',
+                'tempat_lahir'      => 'Gorontalo',
+                'tgl_lahir'         => '1988-08-17',
+                'gelar_depan'       => 'Drs',
+                'gelar_belakang'    => 'S.Kom, M.Kom',
+                'alamat'            => 'Kota Gorontalo, Jln. Setapak, 698871',
+                'pendidikan'        => 'S3',
+                'lulusan'           => 'Unsrat Manado',
+                'created_at'        => date('Y-m-d'),
+                'updated_at'        => date('Y-m-d'),
+            ],
+            [
+                'jabatan'           => 'dosen',
+                'kelas_id'          => null,
+                'nomor_induk'       => '7550105',
+                'nama_penjabat'     => 'dosen lima',
+                'jk'                => 'Laki-laki',
+                'tempat_lahir'      => 'Gorontalo',
+                'tgl_lahir'         => '1988-08-17',
+                'gelar_depan'       => 'Drs',
+                'gelar_belakang'    => 'S.Kom, M.Kom',
+                'alamat'            => 'Kota Gorontalo, Jln. Setapak, 698871',
+                'pendidikan'        => 'S3',
+                'lulusan'           => 'Unsrat Manado',
+                'created_at'        => date('Y-m-d'),
+                'updated_at'        => date('Y-m-d'),
+            ],
         ];
         $this->db->table('penjabat')->insertBatch($penjabat);
-        
+
         $users = [
             [
                 'ip_address'        => '127.0.0.1',
