@@ -9,7 +9,7 @@
             foreach ($dosen as $row) {
                 $dosens[$row->id] = $row->nama_penjabat;
             }
-            echo form_dropdown('dosen_id[' . ($key - 1) . '][]', $defaults + ($dosens ?? []), (isset($get->dosen_id)) ? $get->dosen_id : '', 'class="select2" multiple id="dosen_id" required');
+            echo form_dropdown('dosen_id[' . ($key - 1) . '][]', $defaults + ($dosens ?? []), @$get->dosen_id, 'class="select2" multiple id="dosen_id" required');
             ?>
         </div>
     </div>
@@ -50,7 +50,7 @@
             foreach ($matakuliah as $row) {
                 $mks[$row->id] = $row->nama_mk;
             }
-            echo form_dropdown('mk_id[]', $defaults + ($mks ?? []), (isset($get->mk_id)) ? $get->mk_id : '', 'class="form-control border" id="mk_id" required');
+            echo form_dropdown('mk_id[]', $defaults + ($mks ?? []), @$get->mk_id, 'class="form-control border" id="mk_id" required');
             ?>
         </div>
     </div>
@@ -61,7 +61,7 @@
             foreach ($kelas as $row) {
                 $kelass[$row->id] = $row->nama_kelas;
             }
-            echo form_dropdown('kelas_id[]', $defaults + ($kelass ?? []), (isset($get->kelas_id)) ? $get->kelas_id : '', 'class="form-control border" id="kelas_id" required');
+            echo form_dropdown('kelas_id[]', $defaults + ($kelass ?? []), @$get->kelas_id, 'class="form-control border" id="kelas_id" required');
             ?>
         </div>
     </div>
@@ -72,20 +72,32 @@
             foreach ($laboratorium as $row) {
                 $labs[$row->id] = $row->nama_lab;
             }
-            echo form_dropdown('lab_id[]', $defaults + ($labs ?? []), (isset($get->lab_id)) ? $get->lab_id : '', 'class="form-control border" id="lab_id" required');
+            echo form_dropdown('lab_id[]', $defaults + ($labs ?? []), @$get->lab_id, 'class="form-control border" id="lab_id" required');
             ?>
+        </div>
+    </div>
+    <div class="form-group mode2">
+        <label for="semester" class="col-form-label">Semester</label>
+        <div class="item">
+            <input type="text" class="form-control border" id="semester" name="semester[]" value="<?= @$get->semester ?>" placeholder="Semester..." required />
+        </div>
+    </div>
+    <div class="form-group mode2">
+        <label for="sks" class="col-form-label">SKS</label>
+        <div class="item">
+            <input type="text" class="form-control border" id="sks" name="sks[]" value="<?= @$get->sks ?>" placeholder="SKS..." required />
         </div>
     </div>
     <div class="form-group mode2">
         <label for="waktu_mulai" class="col-form-label">Waktu Mulai</label>
         <div class="item">
-            <input type="time" class="form-control border" id="waktu_mulai" name="waktu_mulai[]" value="<?= (isset($get->waktu_mulai)) ? $get->waktu_mulai : ''; ?>" placeholder="Waktu Mulai" required />
+            <input type="time" class="form-control border" id="waktu_mulai" name="waktu_mulai[]" value="<?= @$get->waktu_mulai ?>" placeholder="Waktu Mulai" required />
         </div>
     </div>
     <div class="form-group mode2">
         <label for="waktu_selesai" class="col-form-label">Waktu Selesai</label>
         <div class="item">
-            <input type="time" class="form-control border" id="waktu_selesai" name="waktu_selesai[]" value="<?= (isset($get->waktu_selesai)) ? $get->waktu_selesai : ''; ?>" placeholder="Waktu Selesai" required />
+            <input type="time" class="form-control border" id="waktu_selesai" name="waktu_selesai[]" value="<?= @$get->waktu_selesai ?>" placeholder="Waktu Selesai" required />
         </div>
     </div>
     <div class="form-group mode2">
@@ -101,12 +113,12 @@
                 'sabtu' => "sabtu",
                 'minggu' => "minggu",
             );
-            echo form_dropdown('hari[]', $defaults + $options, (isset($get->hari)) ? $get->hari : '', 'class="form-control border" id="hari" required');
+            echo form_dropdown('hari[]', $defaults + $options, @$get->hari, 'class="form-control border" id="hari" required');
             ?>
         </div>
     </div>
 <?php endif ?>
-<input type="hidden" name="id[]" value="<?= (isset($get->id)) ? $get->id : ''; ?>" />
+<input type="hidden" name="id[]" value="<?= @$get->id ?>" />
 
 <script>
     $('.select2 option:first').attr('disabled', true)

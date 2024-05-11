@@ -64,8 +64,15 @@
                         <h6 class="text-white text-capitalize ps-3">Jadwal</h6>
                     </div>
                     <div class="card-body">
+                        <div id="toolbar">
+                            <?php if (in_groups([1, 2])) : ?>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <a href="<?= site_url('home/export_pdf') ?>" target="_blank" class="btn btn-primary">Laporan</a>
+                                </div>
+                            <?php endif ?>
+                        </div>
                         <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0" id="table" data-toggle="table" data-ajax="ajaxRequest" data-side-pagination="server" data-pagination="true" data-search="true" data-show-columns="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId">
+                            <table class="table align-items-center mb-0" id="table" data-toggle="table" data-ajax="ajaxRequest" data-side-pagination="server" data-pagination="true" data-search="true" data-show-columns="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-toolbar="#toolbar">
                                 <thead>
                                     <tr>
                                         <th data-field="nomor">No</th>

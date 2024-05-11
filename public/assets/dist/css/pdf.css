@@ -1,3 +1,7 @@
+.font {
+    font-family: Arial, monospace;
+}
+
 .reset-table {
     margin: 0;
     padding: 0;
@@ -5,6 +9,21 @@
     border-collapse: collapse;
     border-spacing: 0;
     background-image: none;
+}
+
+.bordered tr th { 
+    border: 1px solid balck;
+    padding: 10px !important;
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+.bordered tr td { 
+    border: 1px solid balck;
+    padding: 0 10px !important;
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
 }
 
 .borderless {
@@ -100,6 +119,10 @@ th {
     padding: 0 5px;
 }
 
+.tb-center {
+    text-align: center;
+}
+
 .kop-first {
     font-size: 15pt;
 }
@@ -154,4 +177,8 @@ th {
 
 .mb-5 {
     margin-bottom: 10em;
+}
+
+.p-0 {
+    padding: 0;
 }

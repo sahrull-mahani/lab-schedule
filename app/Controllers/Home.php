@@ -4,13 +4,14 @@ namespace App\Controllers;
 
 use App\Models\ApiModel;
 use App\Models\HomeM;
+use App\Models\JadwalM;
 use App\Models\KelasM;
 use App\Models\LaboratoriumM;
 use App\Models\Mata_kuliahM;
 
 class Home extends BaseController
 {
-    protected $apiModel, $data, $labm, $kelasm, $mkm, $homem;
+    protected $apiModel, $data, $labm, $kelasm, $mkm, $homem, $jadwalm;
     public function __construct()
     {
         $this->apiModel = new ApiModel();
@@ -18,6 +19,7 @@ class Home extends BaseController
         $this->kelasm = new KelasM();
         $this->mkm = new Mata_kuliahM();
         $this->homem = new HomeM();
+        $this->jadwalm = new JadwalM();
     }
     public function index()
     {
@@ -103,5 +105,49 @@ class Home extends BaseController
         header('Content-Transfer-Encoding: binary');
         header('Accept-Ranges: bytes');
         readfile($filepath);
+    }
+
+    public function export_pdf()
+    {
+        $jadwal = $this->jadwalm
+        ->select('*, case
+        when hari = "senin" then 1
+        when hari = "selasa" then 2
+        when hari = "rabu" then 3
+        when hari = "kamis" then 4
+        when hari = "jumat" then 5
+        when hari = "sabtu" then 6
+        when hari = "minggu" then 7
+        else 0
+        end AS day', false)
+        ->orderBy('day', 'asc')
+        ->joinLab()->joinMk()->where('status', 'setuju')
+        ->where('YEAR(jadwal.created_at)', date('Y'))
+        ->findAll();
+
+        $data = [
+            'jadwal'=>$jadwal
+        ];
+
+        $format = [
+            'format'    => 'A4',
+            'orientation' => 'L',
+            'margin_left' => 10,
+            'margin_right' => 10,
+            'margin_top' => 30,
+            'margin_bottom' => 10,
+            'margin_header' => 10,
+            'margin_footer' => 9,
+        ];
+        $mpdf = new \Mpdf\Mpdf($format);
+
+        $mpdf->SetTitle('Laporan jadwal tahun ini');
+        $pdfstyle = file_get_contents(__DIR__ . '/../../public/assets/dist/css/pdf.css');
+        $mpdf->WriteHTML($pdfstyle, \Mpdf\HTMLParserMode::HEADER_CSS);
+
+        $html = view('App\Views\pdf\laporan-tahunan', $data);
+        $mpdf->WriteHTML($html);
+
+        return redirect()->to($mpdf->Output());
     }
 }

@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class JadwalM extends Model
 {
     protected $table = 'jadwal';
-    protected $allowedFields = array('dosen_id', 'dosentt_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari', 'status', 'dosen_verify');
+    protected $allowedFields = array('dosen_id', 'dosentt_id', 'mk_id', 'kelas_id', 'lab_id', 'waktu_mulai', 'waktu_selesai', 'hari', 'status', 'dosen_verify', 'semester', 'sks');
     protected $returnType     = 'object';
     protected $useSoftDeletes = false;
 
@@ -21,6 +21,8 @@ class JadwalM extends Model
         'mk_id' => 'required|max_length[6]',
         'kelas_id' => 'required|max_length[6]',
         'lab_id' => 'required|max_length[6]',
+        'semester' => 'required|max_length[6]',
+        'sks' => 'required|max_length[2]',
         'waktu_mulai' => 'required',
         'waktu_selesai' => 'required',
         'hari' => 'required',
@@ -31,13 +33,15 @@ class JadwalM extends Model
         'mk_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
         'kelas_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
         'lab_id' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
+        'semester' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 6 Karakter'],
+        'sks' => ['required' => 'tidak boleh kosong', 'max_length' => 'Maximal 2 Karakter'],
         'waktu_mulai' => ['required' => 'tidak boleh kosong'],
         'waktu_selesai' => ['required' => 'tidak boleh kosong'],
         'hari' => ['required' => 'tidak boleh kosong'],
     ];
     private function _get_datatables()
     {
-        $column_search = array('nama_penjabat', 'nama_mk', 'nama_kelas', 'nama_lab', 'waktu_mulai', 'waktu_selesai', 'hari', 'status');
+        $column_search = array('nama_penjabat', 'nama_mk', 'nama_kelas', 'nama_lab', 'waktu_mulai', 'waktu_selesai', 'hari', 'status', 'semester', 'sks');
         $i = 0;
         foreach ($column_search as $item) { // loop column 
             if ($_GET['search']) {
@@ -91,6 +95,19 @@ class JadwalM extends Model
             $this->where($this->table . '.' . $this->deletedField, null);
         }
         return $this->get()->getNumRows();
+    }
+
+    public function joinLab()
+    {
+        return $this->join('laboratorium', 'laboratorium.id = jadwal.lab_id');
+    }
+    public function joinMk()
+    {
+        return $this->join('mata_kuliah', 'mata_kuliah.id = jadwal.mk_id');
+    }
+    public function joinKelas()
+    {
+        return $this->join('kelas', 'kelas.id = jadwal.kelas_id');
     }
 }
 /* End of file JadwalM.php */
