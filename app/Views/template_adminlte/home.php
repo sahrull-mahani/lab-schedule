@@ -77,6 +77,7 @@
                                     <tr>
                                         <th data-field="nomor">No</th>
                                         <th data-field="dosen_id">Dosen</th>
+                                        <th data-field="ttdosen_id">Team Teaching</th>
                                         <th data-field="mk_id">Mata Kuliah</th>
                                         <th data-field="kelas_id">Kelas</th>
                                         <th data-field="lab_id">Laboratorium</th>

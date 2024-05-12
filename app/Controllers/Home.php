@@ -63,6 +63,7 @@ class Home extends BaseController
             $row['id'] = $rows->id;
             $row['nomor'] = $no++;
             $row['dosen_id'] = ($rows->status == 'pindah jadwal' || $rows->status == 'dosen setuju') ? pegawaiByID($rows->dosen_verify)->nama_penjabat : $rows->nama_penjabat;
+            $row['ttdosen_id'] = pegawaiByID($rows->dosentt_id)->nama_penjabat;
             $row['mk_id'] = $rows->nama_mk;
             $row['kelas_id'] = $rows->nama_kelas;
             $row['lab_id'] = $rows->nama_lab;
