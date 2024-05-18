@@ -67,6 +67,8 @@ class Home extends BaseController
             $row['mk_id'] = $rows->nama_mk;
             $row['kelas_id'] = $rows->nama_kelas;
             $row['lab_id'] = $rows->nama_lab;
+            $row['sks'] = $rows->sks;
+            $row['semester'] = $rows->semester;
             $row['waktu_mulai'] = $rows->waktu_mulai;
             $row['waktu_selesai'] = $rows->waktu_selesai;
             $row['hari'] = $rows->hari;

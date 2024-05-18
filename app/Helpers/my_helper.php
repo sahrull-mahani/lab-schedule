@@ -331,3 +331,26 @@ function getNotifTukarJadwal($id)
 {
     return db_connect()->table('jadwal j')->select('j.*, p.nama_penjabat as dosen, pe.nama_penjabat as dosen_pengganti')->join('penjabat p', 'p.id=j.dosen_verify')->join('penjabat pe', 'pe.id=j.dosen_id')->where('dosen_verify', $id)->where('status', 'pindah jadwal')->get()->getResult();
 }
+
+function getRecomend()
+{
+    $days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+    $data = db_connect()->table('jadwal')->groupBy('hari')->get()->getResult();
+    foreach ($data as $row) {
+        $hari[] = $row->hari;
+    }
+
+    // if (count($hari) >= 7) {
+    //     $senin = db_connect()->table('jadwal')->where('hari', 'senin')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
+    //     $selasa = db_connect()->table('jadwal')->where('hari', 'selasa')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
+    //     $rabu = db_connect()->table('jadwal')->where('hari', 'rabu')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
+    //     $kamis = db_connect()->table('jadwal')->where('hari', 'kamis')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
+    //     $jumat = db_connect()->table('jadwal')->where('hari', 'jumat')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
+    //     $sabtu = db_connect()->table('jadwal')->where('hari', 'sabtu')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
+    //     $minggu = db_connect()->table('jadwal')->where('hari', 'minggu')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
+    // }
+
+    $hari = array_diff($days, $hari);
+
+    return implode(', ', $hari);
+}

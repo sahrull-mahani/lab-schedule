@@ -31,6 +31,12 @@
                             position: 'top right',
                             msg: data.text
                         })
+                    } else if (data.type == 'info') {
+                        Swal.fire({
+                            title: data.title,
+                            html: data.text,
+                            icon: data.type
+                        })
                     } else {
                         $.each(data.text, function(i, val) {
                             Lobibox.notify(data.type, {

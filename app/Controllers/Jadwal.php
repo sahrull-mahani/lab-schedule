@@ -61,6 +61,8 @@ class Jadwal extends BaseController
             $row['mk_id'] = $rows->nama_mk;
             $row['kelas_id'] = $rows->nama_kelas;
             $row['lab_id'] = $rows->nama_lab;
+            $row['semester'] = $rows->semester;
+            $row['sks'] = $rows->sks;
             $row['waktu_mulai'] = $rows->waktu_mulai;
             $row['waktu_selesai'] = $rows->waktu_selesai;
             $row['hari'] = $rows->hari;
@@ -132,8 +134,9 @@ class Jadwal extends BaseController
                     $waktumulai = current($waktumulai);
                     $hari = $this->request->getPost('hari')[$key];
                     if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->first()) {
-                        $status['type'] = 'warning';
-                        $status['text'] = ['Laboratorium' => 'Telah Terjadwal', 'Waktu Mulai' => 'Telah Terjadwal', 'Hari' => 'Telah Terjadwal'];
+                        $status['title'] = 'Jadwal telah digunakan!';
+                        $status['type'] = 'info';
+                        $status['text'] = "laboratirum telah digunakan!\n Waktu & hari yang Anda ajukan telah dipakai, \n Rekomendasi hari : " . getRecomend();
                         return json_encode($status);
                     }
                     $mainDosen = current($this->request->getPost('dosen_id')[$key]);
@@ -214,7 +217,7 @@ class Jadwal extends BaseController
                     }
                     if ($jadwal->status == 'pindah jadwal') {
                         $status['type'] = 'warning';
-                        $status['text'] = ['Dosen yang bersangkutan belum menyetujui!',' Anda belum bisa mengganti status!'];
+                        $status['text'] = ['Dosen yang bersangkutan belum menyetujui!', ' Anda belum bisa mengganti status!'];
                         return json_encode($status);
                     }
                     array_push($data, array(

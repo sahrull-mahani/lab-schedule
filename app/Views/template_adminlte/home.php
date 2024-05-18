@@ -81,6 +81,8 @@
                                         <th data-field="mk_id">Mata Kuliah</th>
                                         <th data-field="kelas_id">Kelas</th>
                                         <th data-field="lab_id">Laboratorium</th>
+                                        <th data-field="sks">SKS</th>
+                                        <th data-field="semester">Semester</th>
                                         <th data-field="waktu_mulai">Waktu Mulai</th>
                                         <th data-field="waktu_selesai">Waktu Selesai</th>
                                         <th data-field="hari">Hari</th>
