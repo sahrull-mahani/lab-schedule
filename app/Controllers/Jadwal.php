@@ -134,14 +134,13 @@ class Jadwal extends BaseController
                     $waktumulai = current($waktumulai);
                     $hari = $this->request->getPost('hari')[$key];
                     $pattern = '';
-                    foreach (getRecomend() as $key => $day) {
-                        $allow[] = $day->dipakai == null ? "$key kosong" : "$key $day->jam";
+                    foreach (getRecomend() as $hari => $day) {
+                        $allow[] = $day->dipakai == null ? "$hari kosong" : "$hari $day->jam";
                         if ($day->dipakai == null) continue;
                         $pattern .= $day->dipakai ? $day->dipakai : null;
                     }
-                    $allows = implode('<br>', $allow);
-                    // if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->first()) {
                     if ($this->jadwalm->where('lab_id', $labID)->where("waktu_mulai REGEXP '$pattern'")->where('hari', $hari)->where('status', 'setuju')->first()) {
+                        $allows = implode('<br>', $allow);
                         $status['title'] = 'Jadwal telah digunakan!';
                         $status['type'] = 'info';
                         $status['text'] = "Ruangan telah digunakan! <br> Waktu & hari yang Anda ajukan telah dipakai, <br> Rekomendasi hari : $allows";

@@ -25,7 +25,7 @@
                             <th data-field="state" data-checkbox="true"></th>
                             <th data-field="id" data-visible="false">ID</th>
                             <th data-field="nomor">No</th>
-                            <th data-field="nama_lab">Nama Laboratorium</th>
+                            <th data-field="nama_lab">Nama Ruangan</th>
                         </tr>
                     </thead>
                 </table>
