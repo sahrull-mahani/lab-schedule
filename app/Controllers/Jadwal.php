@@ -134,8 +134,8 @@ class Jadwal extends BaseController
                     $waktumulai = current($waktumulai);
                     $hari = $this->request->getPost('hari')[$key];
                     $pattern = '';
-                    foreach (getRecomend() as $hari => $day) {
-                        $allow[] = $day->dipakai == null ? "$hari kosong" : "$hari $day->jam";
+                    foreach (getRecomend() as $myday => $day) {
+                        $allow[] = $day->dipakai == null ? "$myday kosong" : "$myday $day->jam";
                         if ($day->dipakai == null) continue;
                         $pattern .= $day->dipakai ? $day->dipakai : null;
                     }
