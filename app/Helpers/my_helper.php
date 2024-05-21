@@ -332,7 +332,7 @@ function getNotifTukarJadwal($id)
     return db_connect()->table('jadwal j')->select('j.*, p.nama_penjabat as dosen, pe.nama_penjabat as dosen_pengganti')->join('penjabat p', 'p.id=j.dosen_verify')->join('penjabat pe', 'pe.id=j.dosen_id')->where('dosen_verify', $id)->where('status', 'pindah jadwal')->get()->getResult();
 }
 
-function getRecomend()
+function getRecomend($customday = null)
 {
     $get = function ($hari) {
         for ($i = 8; $i <= 17; $i++) {
@@ -371,8 +371,12 @@ function getRecomend()
         $res->total = count($times);
         return $res;
     };
-
-
+    
+    if ($customday != null) {
+        $result = json_decode(json_encode(['jam' => implode(', ', $get($customday)->jam), 'dipakai' => $get($customday)->not ? implode('|',$get($customday)->not) : null]));
+        return $result;
+    }
+    
     $result = new stdClass;
     $days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat'];
     foreach ($days as $day) {
