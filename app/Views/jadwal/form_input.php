@@ -131,10 +131,32 @@
 <input type="hidden" name="id[]" value="<?= @$get->id ?>" />
 
 <script>
+    function selectItem(target, id) { // refactored this a bit, don't pay attention to this being a function
+        var option = $(target).children('[value=' + id + ']');
+        option.detach();
+        $(target).append(option).change();
+    }
+
+    function customPreSelect() {
+        let items = $('#selected_items').val().split(',');
+        $("select").val('').change();
+        initSelect(items);
+    }
+
+    function initSelect(items) { // pre-select items
+        items.forEach(item => { // iterate through array of items that need to be pre-selected
+            let value = $('select option[value=' + item + ']').text(); // get items inner text
+            $('select option[value=' + item + ']').remove(); // remove current item from DOM
+            $('select').append(new Option(value, item, true, true)); // append it, making it selected by default
+        });
+    }
     $('.select2 option:first').attr('selected', false)
     $('.select2 option:first').attr('disabled', true)
     $('.select2').select2({
         width: '100%',
         maximumSelectionLength: 2,
+    })
+    $('.select2').on('select2:select', function(e) {
+        selectItem(e.target, e.params.data.id)
     })
 </script>
