@@ -43,7 +43,7 @@
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">biotech</i>
                     </div>
-                    <span class="nav-link-text ms-1">Laboratorium</span>
+                    <span class="nav-link-text ms-1">Ruangan</span>
                 </a>
             </li>
 
@@ -59,14 +59,14 @@
                     <span class="nav-link-text ms-1">Dosen</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link text-white <?= @$m_mahasiswa ?>" href="<?= site_url('mahasiswa') ?>">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">person_add</i>
                     </div>
                     <span class="nav-link-text ms-1">Mahasiswa</span>
                 </a>
-            </li>
+            </li> -->
         <?php endif ?>
 
         <li class="nav-item mt-3">

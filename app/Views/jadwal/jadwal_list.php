@@ -12,16 +12,14 @@
         <div class="card-body">
             <?php if (in_groups([1, 2, 3])) : ?>
                 <div id="toolbar">
+                    <input type="number" class="btn btn-default border d-none" style="width: 100px;" value="1" min="1" id="number-of-row" readonly>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <?php if (is_admin()) : ?>
-                            <input type="number" class="btn btn-default border" style="width: 100px;" value="1" min="1" id="number-of-row">
-                            <button type="button" class="btn btn-primary create" method="create" data-toggle="modal"><i class="fa fa-plus"></i> Buat Jadwal</button>
-                        <?php endif ?>
-                        <!-- <button type="button" class="btn btn-warning" id="edit" method="edit" disabled><i class="fa fa-edit"></i> Pindah Jadwal</button> -->
+                        <button type="button" class="btn btn-primary create" method="create" data-toggle="modal"><?= is_admin() ? '<i class="fa fa-plus"></i> Buat Jadwal' : 'Ajukan Jadwal' ?></button>
                         <?php if (is_admin()) : ?>
                             <button type="button" class="btn btn-danger" id="remove" disabled><i class="fa fa-trash"></i> Hapus</button>
                             <button type="button" class="btn btn-success" id="approve" disabled><i class="fa fa-check"></i> Status</button>
                         <?php endif ?>
+                        <!-- <button type="button" class="btn btn-warning" id="edit" method="edit" disabled><i class="fa fa-edit"></i> Pindah Jadwal</button> -->
                     </div>
                 </div>
             <?php endif ?>
@@ -40,7 +38,7 @@
                             <th data-field="semester">Semester</th>
                             <th data-field="kelas_id">Kelas</th>
                             <th data-field="sks">SKS</th>
-                            <th data-field="lab_id">Laboratorium</th>
+                            <th data-field="lab_id">Ruangan</th>
                             <th data-field="waktu_mulai">Waktu Mulai</th>
                             <th data-field="waktu_selesai">Waktu Selesai</th>
                             <?php if (in_groups([1, 2, 3])) : ?>

@@ -113,7 +113,7 @@ class Home extends BaseController
     public function export_pdf()
     {
         $jadwal = $this->jadwalm
-        ->select('*, case
+            ->select('*, case
         when hari = "senin" then 1
         when hari = "selasa" then 2
         when hari = "rabu" then 3
@@ -123,13 +123,13 @@ class Home extends BaseController
         when hari = "minggu" then 7
         else 0
         end AS day', false)
-        ->orderBy('day', 'asc')
-        ->joinLab()->joinMk()->where('status', 'setuju')
-        ->where('YEAR(jadwal.created_at)', date('Y'))
-        ->findAll();
+            ->orderBy('day', 'asc')
+            ->joinLab()->joinMk()->where('status', 'setuju')
+            ->where('YEAR(jadwal.created_at)', date('Y'))
+            ->findAll();
 
         $data = [
-            'jadwal'=>$jadwal
+            'jadwal' => $jadwal
         ];
 
         $format = [

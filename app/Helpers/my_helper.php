@@ -334,23 +334,52 @@ function getNotifTukarJadwal($id)
 
 function getRecomend()
 {
-    $days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
-    $data = db_connect()->table('jadwal')->groupBy('hari')->get()->getResult();
-    foreach ($data as $row) {
-        $hari[] = $row->hari;
+    $get = function ($hari) {
+        for ($i = 8; $i <= 17; $i++) {
+            $times[] = sprintf('%02d', $i);
+        }
+        $slice = function ($from, $to) use ($times) {
+            $keys = array_flip(array_keys($times));
+            if (isset($keys[$from]) and isset($keys[$to])) {
+                return array_slice($times, $keys[$from], $keys[$to] - $keys[$from] + 1);
+            }
+            throw new InvalidArgumentException('Invalid from and/or to key.');
+        };
+
+        $data = db_connect()->table('jadwal')->where('hari', $hari)->get()->getResult();
+        foreach ($data as $row) {
+            $start = explode(':', $row->waktu_mulai);
+            $end = explode(':', $row->waktu_selesai);
+            $slices = $slice(array_search(current($start), $times), array_search(current($end), $times));
+            foreach ($slices as $t) {
+                $key = array_search($t, $times);
+                if (array_key_exists($key, $times)) {
+                    $not[] = $t;
+                    unset($times[$key]);
+                }
+            }
+        }
+
+        foreach ($times as $key => $time) {
+            if ($time == 12) continue;
+            if ($time == 17) break;
+            $newtimes[] = "$time:00" . ' - ' . sprintf('%02d', $time + 1) . ':00';
+        }
+        $res = new stdClass();
+        $res->jam = $newtimes;
+        $res->not = @$not;
+        $res->total = count($times);
+        return $res;
+    };
+
+
+    $result = new stdClass;
+    $days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat'];
+    foreach ($days as $day) {
+        if ($get($day)->total == 0) continue;
+
+        $result->$day = json_decode(json_encode(['jam' => implode(', ', $get($day)->jam), 'dipakai' => $get($day)->not ? implode('|',$get($day)->not) : null]));
     }
 
-    // if (count($hari) >= 7) {
-    //     $senin = db_connect()->table('jadwal')->where('hari', 'senin')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
-    //     $selasa = db_connect()->table('jadwal')->where('hari', 'selasa')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
-    //     $rabu = db_connect()->table('jadwal')->where('hari', 'rabu')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
-    //     $kamis = db_connect()->table('jadwal')->where('hari', 'kamis')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
-    //     $jumat = db_connect()->table('jadwal')->where('hari', 'jumat')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
-    //     $sabtu = db_connect()->table('jadwal')->where('hari', 'sabtu')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
-    //     $minggu = db_connect()->table('jadwal')->where('hari', 'minggu')->like('waktu_mulai', '07', 'start')->like('waktu_selesai', '09', 'start')->get()->getResult();
-    // }
-
-    $hari = array_diff($days, $hari);
-
-    return implode(', ', $hari);
+    return $result;
 }

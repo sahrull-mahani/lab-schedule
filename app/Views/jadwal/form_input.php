@@ -14,31 +14,43 @@
         </div>
     </div>
     <?php if ($aksi == 'edit') : ?>
-        <div class="form-group mode2">
+        <!-- <div class="form-group mode2">
             <label for="dosen_id" class="col-form-label">Dosen Pengganti</label>
             <div class="item">
-                <?php $defaults = array('' => '==Pilih Dosen Pengganti==');
-                foreach ($dosen as $row) {
-                    $dosens[$row->id] = $row->nama_penjabat;
-                }
-                echo form_dropdown('dosen_verify[]', $defaults + ($dosens ?? []), '', 'class="form-control border" id="dosen_verify"');
+                <?php //$defaults = array('' => '==Pilih Dosen Pengganti==');
+                // foreach ($dosen as $row) {
+                //     $dosens[$row->id] = $row->nama_penjabat;
+                // }
+                // echo form_dropdown('dosen_verify[]', $defaults + ($dosens ?? []), '', 'class="form-control border" id="dosen_verify"');
                 ?>
             </div>
-        </div>
+        </div> -->
     <?php endif ?>
 <?php else : ?>
+    <div class="form-group mode2">
+        <label for="dosen_id" class="col-form-label">Dosen Team Teaching</label>
+        <div class="item">
+            <?php $defaults = array('' => '==Pilih Team Teaching==');
+            foreach ($dosen as $row) {
+                if ($row->id == session('id_peg')) continue;
+                $dosens[$row->id] = $row->nama_penjabat;
+            }
+            echo form_dropdown('dosen_id[' . ($key - 1) . '][]', $defaults + ($dosens ?? []), @$get->dosen_id, 'class="select2" id="dosen_id" required');
+            ?>
+        </div>
+    </div>
     <?php if ($aksi == 'edit' && $get->dosen_id != session('id_peg')) : ?>
-        <div class="form-group mode2">
+        <!-- <div class="form-group mode2">
             <label for="dosen_id" class="col-form-label">Tukar Jadwal</label>
             <div class="item">
-                <?php $defaults = array('' => '==Pilih Tukar Jadwal atau Tidak==');
-                $options = [
-                    'tukar' => 'Tukar'
-                ];
-                echo form_dropdown('dosen_verify[]', $defaults + $options, '', 'class="form-control border" id="dosen_verify"');
+                <?php //$defaults = array('' => '==Pilih Tukar Jadwal atau Tidak==');
+                // $options = [
+                //     'tukar' => 'Tukar'
+                // ];
+                // echo form_dropdown('dosen_verify[]', $defaults + $options, '', 'class="form-control border" id="dosen_verify"');
                 ?>
             </div>
-        </div>
+        </div> -->
     <?php endif ?>
 <?php endif ?>
 
@@ -66,9 +78,9 @@
         </div>
     </div>
     <div class="form-group mode2">
-        <label for="lab_id" class="col-form-label">Laboratorium</label>
+        <label for="lab_id" class="col-form-label">Ruangan</label>
         <div class="item">
-            <?php $defaults = array('' => '==Pilih Laboratorium==');
+            <?php $defaults = array('' => '==Pilih Ruangan==');
             foreach ($laboratorium as $row) {
                 $labs[$row->id] = $row->nama_lab;
             }
@@ -91,13 +103,13 @@
     <div class="form-group mode2">
         <label for="waktu_mulai" class="col-form-label">Waktu Mulai</label>
         <div class="item">
-            <input type="time" class="form-control border" id="waktu_mulai" name="waktu_mulai[]" value="<?= @$get->waktu_mulai ?>" placeholder="Waktu Mulai" required />
+            <input type="time" class="form-control border" min="08:00" max="16:00" step="900" id="waktu_mulai" name="waktu_mulai[]" value="<?= @$get->waktu_mulai ?>" placeholder="Waktu Mulai" required />
         </div>
     </div>
     <div class="form-group mode2">
         <label for="waktu_selesai" class="col-form-label">Waktu Selesai</label>
         <div class="item">
-            <input type="time" class="form-control border" id="waktu_selesai" name="waktu_selesai[]" value="<?= @$get->waktu_selesai ?>" placeholder="Waktu Selesai" required />
+            <input type="time" class="form-control border" id="waktu_selesai" min="09:00" max="17:00" step="900" name="waktu_selesai[]" value="<?= @$get->waktu_selesai ?>" placeholder="Waktu Selesai" required />
         </div>
     </div>
     <div class="form-group mode2">
@@ -110,8 +122,6 @@
                 'rabu' => 'rabu',
                 'kamis' => 'kamis',
                 'jumat' => "jum'at",
-                'sabtu' => "sabtu",
-                'minggu' => "minggu",
             );
             echo form_dropdown('hari[]', $defaults + $options, @$get->hari, 'class="form-control border" id="hari" required');
             ?>
@@ -121,10 +131,10 @@
 <input type="hidden" name="id[]" value="<?= @$get->id ?>" />
 
 <script>
-    $('.select2 option:first').attr('disabled', true)
     $('.select2 option:first').attr('selected', false)
+    $('.select2 option:first').attr('disabled', true)
     $('.select2').select2({
         width: '100%',
-        maximumSelectionLength: 2
+        maximumSelectionLength: 2,
     })
 </script>

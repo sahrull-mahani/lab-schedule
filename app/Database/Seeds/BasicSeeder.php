@@ -21,10 +21,10 @@ class BasicSeeder extends Seeder
                 'name'          => 'dosen',
                 'description'   => 'Dosen Pengajar'
             ],
-            [
-                'name'          => 'mahasiswa',
-                'description'   => 'Mahasiswa'
-            ],
+            // [
+            //     'name'          => 'mahasiswa',
+            //     'description'   => 'Mahasiswa'
+            // ],
         ];
         $this->db->table('groups')->insertBatch($groups);
 
@@ -105,22 +105,22 @@ class BasicSeeder extends Seeder
                 'created_at'        => date('Y-m-d'),
                 'updated_at'        => date('Y-m-d'),
             ],
-            [
-                'jabatan'           => 'mahasiswa',
-                'kelas_id'          => 1,
-                'nomor_induk'       => '2023001',
-                'nama_penjabat'     => 'nama mahasiswa',
-                'jk'                => 'Laki-laki',
-                'tempat_lahir'      => 'Gorontalo',
-                'tgl_lahir'         => '2002-01-27',
-                'gelar_depan'       => null,
-                'gelar_belakang'    => null,
-                'alamat'            => 'Kab Gorontalo, Jln. Hubulo, 96288',
-                'pendidikan'        => '',
-                'lulusan'           => 'SMK N 1 Limboto',
-                'created_at'        => date('Y-m-d'),
-                'updated_at'        => date('Y-m-d'),
-            ],
+            // [
+            //     'jabatan'           => 'mahasiswa',
+            //     'kelas_id'          => 1,
+            //     'nomor_induk'       => '2023001',
+            //     'nama_penjabat'     => 'nama mahasiswa',
+            //     'jk'                => 'Laki-laki',
+            //     'tempat_lahir'      => 'Gorontalo',
+            //     'tgl_lahir'         => '2002-01-27',
+            //     'gelar_depan'       => null,
+            //     'gelar_belakang'    => null,
+            //     'alamat'            => 'Kab Gorontalo, Jln. Hubulo, 96288',
+            //     'pendidikan'        => '',
+            //     'lulusan'           => 'SMK N 1 Limboto',
+            //     'created_at'        => date('Y-m-d'),
+            //     'updated_at'        => date('Y-m-d'),
+            // ],
             [
                 'jabatan'           => 'dosen',
                 'kelas_id'          => null,
@@ -225,18 +225,18 @@ class BasicSeeder extends Seeder
                 'phone'             => '08',
                 'id_peg'            => '2',
             ],
-            [
-                'ip_address'        => '127.0.0.1',
-                'username'          => '2023001',
-                'password'          => '$2y$10$KwpwKG15gc4fPUDDYhUkluvhymHNbAx4daEZjWFBIaeIfnP3yTw.m',
-                'email'             => 'mahasiswa@mail.go.id',
-                'created_on'        => 1268889823,
-                'last_login'        => 1661586883,
-                'active'            => 1,
-                'nama_user'         => 'nama mahasiswa',
-                'phone'             => '08',
-                'id_peg'            => '3',
-            ],
+            // [
+            //     'ip_address'        => '127.0.0.1',
+            //     'username'          => '2023001',
+            //     'password'          => '$2y$10$KwpwKG15gc4fPUDDYhUkluvhymHNbAx4daEZjWFBIaeIfnP3yTw.m',
+            //     'email'             => 'mahasiswa@mail.go.id',
+            //     'created_on'        => 1268889823,
+            //     'last_login'        => 1661586883,
+            //     'active'            => 1,
+            //     'nama_user'         => 'nama mahasiswa',
+            //     'phone'             => '08',
+            //     'id_peg'            => '3',
+            // ],
         ];
         $this->db->table('users')->insertBatch($users);
 
@@ -261,10 +261,10 @@ class BasicSeeder extends Seeder
                 'user_id'   => 3,
                 'group_id'  => 3
             ],
-            [
-                'user_id'   => 4,
-                'group_id'  => 4
-            ],
+            // [
+            //     'user_id'   => 4,
+            //     'group_id'  => 4
+            // ],
         ];
         $this->db->table('users_groups')->insertBatch($usersGroups);
     }

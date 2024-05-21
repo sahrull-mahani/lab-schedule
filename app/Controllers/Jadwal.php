@@ -133,13 +133,21 @@ class Jadwal extends BaseController
                     $waktumulai = explode(':', $waktu);
                     $waktumulai = current($waktumulai);
                     $hari = $this->request->getPost('hari')[$key];
-                    if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->first()) {
+                    $pattern = '';
+                    foreach (getRecomend() as $key => $day) {
+                        $allow[] = $day->dipakai == null ? "$key kosong" : "$key $day->jam";
+                        if ($day->dipakai == null) continue;
+                        $pattern .= $day->dipakai ? $day->dipakai : null;
+                    }
+                    $allows = implode('<br>', $allow);
+                    // if ($this->jadwalm->where('lab_id', $labID)->like('waktu_mulai', $waktumulai, 'after')->where('hari', $hari)->where('status', 'setuju')->first()) {
+                    if ($this->jadwalm->where('lab_id', $labID)->where("waktu_mulai REGEXP '$pattern'")->where('hari', $hari)->where('status', 'setuju')->first()) {
                         $status['title'] = 'Jadwal telah digunakan!';
                         $status['type'] = 'info';
-                        $status['text'] = "laboratirum telah digunakan!\n Waktu & hari yang Anda ajukan telah dipakai, \n Rekomendasi hari : " . getRecomend();
+                        $status['text'] = "Ruangan telah digunakan! <br> Waktu & hari yang Anda ajukan telah dipakai, <br> Rekomendasi hari : $allows";
                         return json_encode($status);
                     }
-                    $mainDosen = current($this->request->getPost('dosen_id')[$key]);
+                    $mainDosen = is_admin() ? current($this->request->getPost('dosen_id')[$key]) : session('id_peg');
                     $ttDosen = end($this->request->getPost('dosen_id')[$key]);
                     array_push($data, array(
                         'dosen_id' => $mainDosen,
