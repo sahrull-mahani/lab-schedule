@@ -332,9 +332,9 @@ function getNotifTukarJadwal($id)
     return db_connect()->table('jadwal j')->select('j.*, p.nama_penjabat as dosen, pe.nama_penjabat as dosen_pengganti')->join('penjabat p', 'p.id=j.dosen_verify')->join('penjabat pe', 'pe.id=j.dosen_id')->where('dosen_verify', $id)->where('status', 'pindah jadwal')->get()->getResult();
 }
 
-function getRecomend($customday = null)
+function getRecomend($customday = null, $semester = null, $lab = null)
 {
-    $get = function ($hari) {
+    $get = function ($hari) use ($semester, $lab) {
         for ($i = 8; $i <= 17; $i++) {
             $times[] = sprintf('%02d', $i);
         }
@@ -346,7 +346,14 @@ function getRecomend($customday = null)
             throw new InvalidArgumentException('Invalid from and/or to key.');
         };
 
-        $data = db_connect()->table('jadwal')->where('hari', $hari)->get()->getResult();
+        $data = db_connect()->table('jadwal')->where('hari', $hari);
+        if ($semester !== null) {
+            $data = $data->where('semester', $semester);
+        }
+        if ($lab !== null) {
+            $data = $data->where('lab_id', $lab);
+        }
+        $data = $data->get()->getResult();
         foreach ($data as $row) {
             $start = explode(':', $row->waktu_mulai);
             $end = explode(':', $row->waktu_selesai);
@@ -355,7 +362,7 @@ function getRecomend($customday = null)
                 $key = array_search($t, $times);
                 if (array_key_exists($key, $times)) {
                     $not[] = $t;
-                    unset($times[$key]);
+                    // unset($times[$key]);
                 }
             }
         }
@@ -366,23 +373,44 @@ function getRecomend($customday = null)
             $newtimes[] = "$time:00" . ' - ' . sprintf('%02d', $time + 1) . ':00';
         }
         $res = new stdClass();
-        $res->jam = $newtimes;
+        $res->jam = @$newtimes;
         $res->not = @$not;
         $res->total = count($times);
         return $res;
     };
-    
+
+
     if ($customday != null) {
-        $result = json_decode(json_encode(['jam' => implode(', ', $get($customday)->jam), 'dipakai' => $get($customday)->not ? implode('|',$get($customday)->not) : null]));
+        if ($get($customday)->not) {
+            $getnot = array_unique($get($customday)->not);
+            foreach ((array)asort($getnot) as $row) {
+                if ($row == 1) continue;
+                $getnot[] = $row;
+            }
+
+            $dipakai = implode('|', $getnot);
+            $full = count($getnot);
+        }
+        $result = json_decode(json_encode(['jam' => implode(', ', $get($customday)->jam), 'dipakai' => $dipakai ?? null, 'full' => $full ?? false]));
         return $result;
     }
-    
+
     $result = new stdClass;
     $days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat'];
     foreach ($days as $day) {
         if ($get($day)->total == 0) continue;
 
-        $result->$day = json_decode(json_encode(['jam' => implode(', ', $get($day)->jam), 'dipakai' => $get($day)->not ? implode('|',$get($day)->not) : null]));
+        if ($get($day)->not) {
+            $getnot = array_unique($get($day)->not);
+            foreach ((array)asort($getnot) as $row) {
+                if ($row == 1) continue;
+                $getnot[] = $row;
+            }
+
+            $dipakai = implode('|', $getnot);
+            $full = count($getnot) == 10 ? true : false;
+        }
+        $result->$day = json_decode(json_encode(['jam' => implode(', ', $get($day)->jam), 'dipakai' => $get($day)->not ? $dipakai : null, 'full' => $get($day)->not ? $full : false, 'day' => $day]));
     }
 
     return $result;

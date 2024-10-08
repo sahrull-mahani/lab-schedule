@@ -7,6 +7,7 @@ use App\Models\JadwalM;
 use App\Models\KelasM;
 use App\Models\LaboratoriumM;
 use App\Models\Mata_kuliahM;
+use Error;
 
 class Jadwal extends BaseController
 {
@@ -139,7 +140,7 @@ class Jadwal extends BaseController
                     foreach (getRecomend() as $myday => $day) {
                         $allow[] = $day->dipakai == null ? "$myday kosong" : "$myday $day->jam";
                     }
-                    if ($this->jadwalm->where('lab_id', $labID)->where("waktu_mulai REGEXP '$waktumulai'")->where("waktu_selesai REGEXP '$waktuselesai'")->where('hari', $hari)->where('status', 'setuju')->first()) {
+                    if ($this->jadwalm->where('lab_id', $labID)->where("HOUR(waktu_mulai)", "$waktumulai")->where("HOUR(waktu_selesai)", "$waktuselesai")->where('hari', $hari)->where('status', 'setuju')->first()) {
                         $allows = implode('<br>', $allow);
                         $status['title'] = 'Jadwal telah digunakan!';
                         $status['type'] = 'info';
@@ -289,6 +290,43 @@ class Jadwal extends BaseController
                     $status['text'] = '<strong>Oh snap!</strong> Proses hapus data gagal.';
                 }
                 echo json_encode($status);
+                break;
+        }
+    }
+
+    public function getOrderTime()
+    {
+        $by = $this->request->getPost('by');
+        $semester = $this->request->getPost('semester');
+        $jadwal = $this->jadwalm;
+        switch ($by) {
+            case 'lab':
+                $lab = $this->request->getPost('lab');
+                foreach (getRecomend(semester: $semester, lab: $lab) as $myday => $day) {
+                    $allows[] = $day;
+                }
+                return json_encode(['message' => $allows]);
+                break;
+            case 'hari':
+                $hari = $this->request->getPost('hari');
+                $dosen = current($this->request->getPost('dosen'));
+                $jadwal = $jadwal->where('hari', $hari)->where('dosen_id', $dosen)->orderBy('hari')->findAll();
+                foreach ($jadwal as $row) {
+                    $timestart = strtotime($row->waktu_mulai);
+                    $timestart = date('H', $timestart);
+                    $timeend = strtotime($row->waktu_selesai);
+                    $timeend = date('H', $timeend);
+
+                    for ($i = $timestart; $i <= $timeend; $i++) {
+                        $times[] = sprintf('%02d', $i) . ':00:00';
+                    }
+                    $result[] = implode(',', $times);
+                }
+
+                return json_encode(['result' => isset($result) ? implode('|', $result) : null]);
+                break;
+            default:
+                return $this->response->setJSON(['message' => 'Tidak dikenali'])->setStatusCode(400);
                 break;
         }
     }
