@@ -309,8 +309,8 @@ class Jadwal extends BaseController
                 break;
             case 'hari':
                 $hari = $this->request->getPost('hari');
-                $dosen = current($this->request->getPost('dosen'));
-                $jadwal = $jadwal->where('hari', $hari)->where('dosen_id', $dosen)->orderBy('hari')->findAll();
+                $lab = $this->request->getPost('lab');
+                $jadwal = $jadwal->where('lab_id', $lab)->where('hari', $hari)->orderBy('hari')->findAll();
                 foreach ($jadwal as $row) {
                     $timestart = strtotime($row->waktu_mulai);
                     $timestart = date('H', $timestart);
@@ -322,8 +322,17 @@ class Jadwal extends BaseController
                     }
                     $result[] = implode(',', $times);
                 }
+                $result =  isset($result) ? implode('|', $result) : null;
+                $data = [
+                    'time' => $result
+                ];
 
-                return json_encode(['result' => isset($result) ? implode('|', $result) : null]);
+                $view = view('jadwal/input-time', $data);
+
+                return json_encode([
+                    'result' => $result,
+                    'view' => $view
+                ]);
                 break;
             default:
                 return $this->response->setJSON(['message' => 'Tidak dikenali'])->setStatusCode(400);
